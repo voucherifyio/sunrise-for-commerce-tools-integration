@@ -14,7 +14,8 @@ export default {
   },
   setup() {
     const { t } = useI18n();
-    const { applyDiscount: ad } = useCartTools();
+    // const { applyDiscount: ad } = useCartTools();
+    const { applyVoucherifyDiscount: ad } = useCartTools();
     const { form, v } = useDiscountCode();
     const applyDiscount = () => ad(form.value.code);
     const getErrorMessage = ({ code }) => {

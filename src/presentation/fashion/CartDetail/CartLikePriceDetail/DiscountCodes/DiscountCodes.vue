@@ -3,7 +3,10 @@
 <script src="./DiscountCodes.js"></script>
 
 <template>
+
+ 
   <div class="single-grand-total">
+    <!-- {{cart.custom.customFieldsRaw}} -->
     <div class="single-grand-total-left col-sm-6">
       <span>{{ t('appliedDiscounts') }}</span>
     </div>
@@ -11,23 +14,20 @@
       class="single-grand-total-right col-sm-6"
       data-test="discount-code-name"
     >
-      <div
-        v-for="discountInfo in cart.discountCodes"
-        :key="discountInfo.discountCode.codeId"
+    {{cart.custom.customFieldsRaw[0].value[0]}}
+
+    <!-- <div
+        v-for="(_, name, value) in cart.custom.customFieldsRaw"
+        :key="name"
       >
-        <b>
-          {{ discountInfo.discountCode.code }}
-        </b>
-        <span v-if="discountInfo.discountCode.name">
-          ({{ discountInfo.discountCode.name }})</span
-        >
-        <span>
-          <RemoveDiscountCodeForm
-            v-if="editable"
-            :codeId="discountInfo.discountCode.codeId"
-          />
-        </span>
+      <div v-if="name==='discount_codes'">
+        <div v-for="code in value" :key="code">
+          <b>blabla{{code}}</b>
+        </div>
       </div>
+
+    </div> -->
     </div>
   </div>
+
 </template>

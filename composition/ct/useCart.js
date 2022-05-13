@@ -111,6 +111,12 @@ const query = gql`
           phone
           email
         }
+        custom {
+          customFieldsRaw {
+              name
+              value
+          }
+      }
       }
     }
   }

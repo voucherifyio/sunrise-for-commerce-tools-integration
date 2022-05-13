@@ -32,8 +32,13 @@
           </span>
         </div>
       </div>
-      <DiscountCodes
+      <!-- <DiscountCodes
         v-if="discountCodesExist(cart)"
+        :cart="cart"
+        :editable="editable"
+      /> -->
+      <DiscountCodes
+        
         :cart="cart"
         :editable="editable"
       />

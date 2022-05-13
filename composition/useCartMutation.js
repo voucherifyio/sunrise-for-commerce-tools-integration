@@ -11,6 +11,7 @@ import {
   setBillingAddress,
   setShippingAddress,
   createMyOrderFromCart,
+  addVoucherifyDiscountCode,
 } from './ct/useCartMutation';
 import useSelectedChannel from './useSelectedChannel';
 import { getValue } from '../src/lib';
@@ -25,6 +26,7 @@ export {
   setBillingAddress,
   setShippingAddress,
   createMyOrderFromCart,
+  addVoucherifyDiscountCode,
 };
 const useCartMutation = () => {
   const { location } = useLocation();
@@ -69,6 +71,8 @@ export const useCartActions = () => {
     );
   const applyDiscount = (code) =>
     mutateCart(addDiscountCode(code));
+  const applyVoucherifyDiscount = (code) =>
+    mutateCart(addVoucherifyDiscountCode(code));  
   const removeDiscount = (codeId) =>
     mutateCart(removeDiscountCode(codeId));
   const setShip = (shippingMethodId) =>
@@ -112,6 +116,7 @@ export const useCartActions = () => {
     changeLine,
     removeLineItem: remove,
     applyDiscount,
+    applyVoucherifyDiscount,
     removeDiscount,
     addLine,
     setShippingMethod: setShip,
