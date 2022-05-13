@@ -101,7 +101,7 @@ const discountVoucherifyCodesExist = (cart) => {
   let codeExist = false;
   cart.custom.customFieldsRaw.forEach(element => {
     console.log(element.name)
-    if(element.name === 'discount_codes') codeExist = true;
+    if(element.name === 'discount_codes' && element.value.length != 0) codeExist = true;
   });
   return codeExist
 };
