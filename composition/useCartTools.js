@@ -97,6 +97,14 @@ const taxes = (cart) => {
 const discountCodesExist = (cart) => {
   return Boolean(cart.discountCodes?.length);
 };
+const discountVoucherifyCodesExist = (cart) => {
+  let codeExist = false;
+  cart.custom.customFieldsRaw.forEach(element => {
+    console.log(element.name)
+    if(element.name === 'discount_codes') codeExist = true;
+  });
+  return codeExist
+};
 
 function useCartTools() {
   const cartActions = useCartActions();
@@ -110,6 +118,7 @@ function useCartTools() {
     subTotal,
     taxes,
     discountCodesExist,
+    discountVoucherifyCodesExist,
     useCart,
   };
   return cartTools;

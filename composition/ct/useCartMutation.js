@@ -100,6 +100,13 @@ export const addVoucherifyDiscountCode = (code) => [
     },
   },
 ];
+export const removeVoucherifyCode = () => [
+  {
+    setCustomField: {
+      name: "discount_codes",
+    },
+  },
+];
 export const removeDiscountCode = (id) => [
   {
     removeDiscountCode: {
