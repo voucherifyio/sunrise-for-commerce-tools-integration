@@ -100,11 +100,18 @@ const discountCodesExist = (cart) => {
 const discountVoucherifyCodesExist = (cart) => {
   let codeExist = false;
   cart.custom.customFieldsRaw.forEach(element => {
-    console.log(element.name)
     if(element.name === 'discount_codes' && element.value.length != 0) codeExist = true;
   });
   return codeExist
 };
+
+const returnVoucherifyCodes = (cart) => {
+  let voucherifyCodes = [];
+  cart.custom.customFieldsRaw.forEach(element => {
+    if(element.name === 'discount_codes' && element.value.length != 0) voucherifyCodes = element.value;
+  });
+  return voucherifyCodes;
+}
 
 function useCartTools() {
   const cartActions = useCartActions();
@@ -119,6 +126,7 @@ function useCartTools() {
     taxes,
     discountCodesExist,
     discountVoucherifyCodesExist,
+    returnVoucherifyCodes,
     useCart,
   };
   return cartTools;
