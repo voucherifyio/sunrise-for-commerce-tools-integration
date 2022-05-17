@@ -37,7 +37,9 @@
                     :editable="true"
                   />
                   <div class="cart-shiping-update-wrapper">
-                    <AddDiscountCodeForm />
+                    <AddDiscountCodeForm 
+                    :cart="cart"
+                    />
                   </div>
                 </div>
                 <div class="col-lg-4">

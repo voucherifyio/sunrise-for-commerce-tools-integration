@@ -12,12 +12,26 @@ export default {
     BaseInput,
     ServerError,
   },
-  setup() {
+  props: {
+    cart: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props) {
     const { t } = useI18n();
-    // const { applyDiscount: ad } = useCartTools();
-    const { applyVoucherifyDiscount: ad } = useCartTools();
+    const { 
+      applyVoucherifyDiscount: ad,
+      returnVoucherifyCodes: rvc,
+    } = useCartTools();
+
     const { form, v } = useDiscountCode();
-    const applyDiscount = () => ad(form.value.code);
+
+    const applyDiscount = () => {
+      const codes = rvc(props.cart);
+      return ad([...codes, form.value.code])
+    };
+
     const getErrorMessage = ({ code }) => {
       if (code === 'DiscountCodeNonApplicable') {
         return t('nonApplicable');
