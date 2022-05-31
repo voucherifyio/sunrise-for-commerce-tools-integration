@@ -22,6 +22,8 @@
           <b>{{code}}</b>
           <RemoveDiscountCodeForm
             v-if="editable"
+            :cart="cart"
+            :code="code"
           />
         </div>
           
