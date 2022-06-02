@@ -5,6 +5,7 @@ import BaseInput from 'presentation/components/BaseInput/BaseInput.vue';
 import { useI18n } from 'vue-i18n';
 import useCartTools from 'hooks/useCartTools';
 import useDiscountCode from 'hooks/useDiscountCode';
+import { ref, watch } from 'vue';
 
 export default {
   components: {
@@ -28,8 +29,9 @@ export default {
     const { form, v } = useDiscountCode();
 
     const applyDiscount = () => {
-      const codes = rvc(props.cart);
-      return ad([...codes, form.value.code])
+      const codes = rvc(props.cart).filter(code => JSON.parse(code).status === 'APPLIED' );
+      
+      return ad([...codes, {code: form.value.code, status: 'NEW'}])
     };
 
     const getErrorMessage = ({ code }) => {
@@ -39,10 +41,19 @@ export default {
       return t('unknownError');
     };
 
+    let codesInfo = ref('')
+    watch(props, props => {
+      const codes = rvc(props.cart).map(code => JSON.parse(code))
+      codesInfo.value = codes.map(code => `${code.code} - ${code.status}`) //now there is whole array, should be only one object related to the last coupon
+    })
+
+
+
     return {
       t,
       applyDiscount,
       form,
+      codesInfo,
       getErrorMessage,
       v,
     };

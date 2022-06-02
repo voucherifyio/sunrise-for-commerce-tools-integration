@@ -6,7 +6,6 @@
   <BaseForm
     :vuelidate="v"
     :onSubmit="applyDiscount"
-    #default="{ error }"
   >
     <div class="discount-code">
       <BaseInput
@@ -25,11 +24,12 @@
         {{ t('apply') }}
       </button>
     </div>
-    <ServerError
+    <!-- <ServerError
       :error="error"
       v-slot="{ graphQLError }"
       class="server-error"
       >{{ getErrorMessage(graphQLError) }}</ServerError
-    >
+    > -->
+    {{codes}}
   </BaseForm>
 </template>

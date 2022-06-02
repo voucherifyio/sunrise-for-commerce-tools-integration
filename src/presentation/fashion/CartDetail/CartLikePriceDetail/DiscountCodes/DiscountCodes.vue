@@ -19,11 +19,12 @@
       >
       <div v-if="custom.name == 'discount_codes'">
         <div v-for="code in custom.value" :key="code">
-          <b>{{code}}</b>
+          <b>{{code.code}}</b>
+          <!-- <b>{{code.value}}</b> -->
           <RemoveDiscountCodeForm
             v-if="editable"
             :cart="cart"
-            :code="code"
+            :code="code.code"
           />
         </div>
           
