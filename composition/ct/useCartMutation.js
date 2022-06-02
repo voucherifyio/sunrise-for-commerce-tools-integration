@@ -92,11 +92,11 @@ export const removeLineItem = (lineItemId) => [
 export const addDiscountCode = (code) => [
   { addDiscountCode: { code } },
 ];
-export const addVoucherifyDiscountCode = (...code) => [
+export const addVoucherifyDiscountCode = (codes) => [
   {
     setCustomField: {
       name: "discount_codes",
-      value: JSON.stringify(...code),
+      value: JSON.stringify( codes.map(code => JSON.stringify(code))) // codes.map(c => JSON.stringify(c)),
     },
   },
 ];

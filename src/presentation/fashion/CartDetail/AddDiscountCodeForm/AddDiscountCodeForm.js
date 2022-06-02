@@ -21,17 +21,19 @@ export default {
   },
   setup(props) {
     const { t } = useI18n();
-    const { 
-      applyVoucherifyDiscount: ad,
-      returnVoucherifyCodes: rvc,
+    const {
+      applyVoucherifyDiscount,
+      returnVoucherifyCodes,
     } = useCartTools();
 
     const { form, v } = useDiscountCode();
 
     const applyDiscount = () => {
-      const codes = rvc(props.cart).filter(code => JSON.parse(code).status === 'APPLIED' );
-      
-      return ad([...codes, {code: form.value.code, status: 'NEW'}])
+      const codes = returnVoucherifyCodes(props.cart)
+        .map(code => JSON.parse(code))
+        .filter(code => ['APPLIED', 'NEW'].includes(code.status));
+
+      return applyVoucherifyDiscount([...codes, { code: form.value.code, status: 'NEW' }])
     };
 
     const getErrorMessage = ({ code }) => {
@@ -43,7 +45,7 @@ export default {
 
     let codesInfo = ref('')
     watch(props, props => {
-      const codes = rvc(props.cart).map(code => JSON.parse(code))
+      const codes = returnVoucherifyCodes(props.cart).map(code => JSON.parse(code))
       codesInfo.value = codes.map(code => `${code.code} - ${code.status}`) //now there is whole array, should be only one object related to the last coupon
     })
 
