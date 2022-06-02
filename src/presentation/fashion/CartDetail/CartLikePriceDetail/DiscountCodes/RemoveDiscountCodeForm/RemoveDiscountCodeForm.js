@@ -14,13 +14,16 @@ export default {
   },
   setup(props) {
     const {
-      returnVoucherifyCodes: rvc,
-      applyVoucherifyDiscount: avd,
+      returnVoucherifyCodes,
+      applyVoucherifyDiscount,
     } = useCartTools();
 
     const removeDiscount = () => {
-      const codes = rvc(props.cart);
-      avd(codes.filter(elem => elem != props.code))
+      const codes = returnVoucherifyCodes(props.cart)
+        .map(code => JSON.parse(code))
+        .filter(code => code.code != props.code)
+        
+      applyVoucherifyDiscount(codes)
     };
     return { removeDiscount };
   },

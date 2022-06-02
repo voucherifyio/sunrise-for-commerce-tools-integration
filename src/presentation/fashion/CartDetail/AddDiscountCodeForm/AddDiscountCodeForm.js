@@ -46,7 +46,8 @@ export default {
     let codesInfo = ref('')
     watch(props, props => {
       const codes = returnVoucherifyCodes(props.cart).map(code => JSON.parse(code))
-      codesInfo.value = codes.map(code => `${code.code} - ${code.status}`) //now there is whole array, should be only one object related to the last coupon
+      const lastAppliedCode = codes.find(code => code.code === form.value.code)
+      codesInfo.value = lastAppliedCode ? `${lastAppliedCode.status}${lastAppliedCode.status !== 'APPLIED' && lastAppliedCode.errMsg ? ' - ' + lastAppliedCode.errMsg : ''}` : ''
     })
 
 

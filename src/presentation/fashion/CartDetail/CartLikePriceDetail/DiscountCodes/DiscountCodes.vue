@@ -5,7 +5,7 @@
 <template>
 
  
-  <div class="single-grand-total">
+  <div class="single-grand-total" v-if="appliedCodes">
     <div class="single-grand-total-left col-sm-6">
       <span>{{ t('appliedDiscounts') }}</span>
     </div>
@@ -13,24 +13,15 @@
       class="single-grand-total-right col-sm-6"
       data-test="discount-code-name"
     >
-    <div
-        v-for="(custom) in cart.custom.customFieldsRaw"
-        :key="custom.name"
-      >
-      <div v-if="custom.name == 'discount_codes'">
-        <div v-for="code in custom.value" :key="code">
-          <b>{{code.code}}</b>
-          <!-- <b>{{code.value}}</b> -->
+        <div v-for="code in appliedCodes" :key="code">
+          <b >{{code.code}}</b>
+          <!-- <b>{{JSON.parse(code).value}}</b> -->
           <RemoveDiscountCodeForm
             v-if="editable"
             :cart="cart"
             :code="code.code"
           />
         </div>
-          
-      </div>
-
-    </div>
     </div>
   </div>
 

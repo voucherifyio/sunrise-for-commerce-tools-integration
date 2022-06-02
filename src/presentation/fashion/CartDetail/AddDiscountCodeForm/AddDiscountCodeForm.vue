@@ -24,12 +24,6 @@
         {{ t('apply') }}
       </button>
     </div>
-    <!-- <ServerError
-      :error="error"
-      v-slot="{ graphQLError }"
-      class="server-error"
-      >{{ getErrorMessage(graphQLError) }}</ServerError
-    > -->
-    {{codes}}
+    {{codesInfo}}
   </BaseForm>
 </template>
