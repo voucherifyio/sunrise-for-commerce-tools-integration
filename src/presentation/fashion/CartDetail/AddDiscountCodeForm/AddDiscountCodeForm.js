@@ -4,8 +4,9 @@ import BaseInput from 'presentation/components/BaseInput/BaseInput.vue';
 
 import { useI18n } from 'vue-i18n';
 import useCartTools from 'hooks/useCartTools';
-import useDiscountCode from 'hooks/useDiscountCode';
+// import useDiscountCode from 'hooks/useDiscountCode';
 import { ref, watch } from 'vue';
+import useVuelidate from '@vuelidate/core';
 
 export default {
   components: {
@@ -21,23 +22,27 @@ export default {
   },
   setup(props) {
     const codesInfo = ref({})
+    const enteredCode = ref('')
     const { t } = useI18n();
     const {
       applyVoucherifyDiscount,
       returnVoucherifyCodes,
     } = useCartTools();
 
-    const { form, v } = useDiscountCode();
+    const form = ref({});
+
+    const v = useVuelidate({
+      code: {}
+    }, form)
 
     const applyDiscount = () => {
       const codes = returnVoucherifyCodes(props.cart)
         .map(code => JSON.parse(code))
         .filter(code => ['APPLIED', 'NEW'].includes(code.status));
 
-      const newCode = form.value.code//{...form.value.code};
-      // form.value.code = ''
-      // $v.$reset()
-      return applyVoucherifyDiscount([...codes, { code: newCode, status: 'NEW' }])
+      enteredCode.value = form.value.code
+      form.value.code = ''
+      return applyVoucherifyDiscount([...codes, { code: enteredCode.value, status: 'NEW' }])
     };
 
     const getErrorMessage = ({ code }) => {
@@ -49,10 +54,12 @@ export default {
 
     watch(props, props => {
       const codes = returnVoucherifyCodes(props.cart).map(code => JSON.parse(code))
-      const lastAppliedCode = codes.find(code => code.code === form.value.code)
-      codesInfo.value = {
-        message: lastAppliedCode ? `${lastAppliedCode.status !== 'APPLIED' && lastAppliedCode.errMsg ? lastAppliedCode.errMsg : lastAppliedCode.status}` : '',
-        status: lastAppliedCode.status === 'APPLIED' ? true : false,
+      const lastAppliedCode = codes.find(code => code.code === enteredCode.value)
+      if(lastAppliedCode) {
+        codesInfo.value = {
+          message: lastAppliedCode ? `${lastAppliedCode.status !== 'APPLIED' && lastAppliedCode.errMsg ? lastAppliedCode.errMsg : lastAppliedCode.status}` : '',
+          status: lastAppliedCode.status === 'APPLIED' ? true : false,
+        }
       }
     })
 
