@@ -24,6 +24,8 @@
         {{ t('apply') }}
       </button>
     </div>
-    {{codesInfo}}
+    <p class="message" :class="{ 'voucher-error': !codesInfo.status }">
+      {{codesInfo.message}}
+    </p>
   </BaseForm>
 </template>

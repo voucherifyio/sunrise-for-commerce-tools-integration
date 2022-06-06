@@ -20,6 +20,7 @@ export default {
     },
   },
   setup(props) {
+    const codesInfo = ref({})
     const { t } = useI18n();
     const {
       applyVoucherifyDiscount,
@@ -33,7 +34,10 @@ export default {
         .map(code => JSON.parse(code))
         .filter(code => ['APPLIED', 'NEW'].includes(code.status));
 
-      return applyVoucherifyDiscount([...codes, { code: form.value.code, status: 'NEW' }])
+      const newCode = form.value.code//{...form.value.code};
+      // form.value.code = ''
+      // $v.$reset()
+      return applyVoucherifyDiscount([...codes, { code: newCode, status: 'NEW' }])
     };
 
     const getErrorMessage = ({ code }) => {
@@ -43,11 +47,13 @@ export default {
       return t('unknownError');
     };
 
-    let codesInfo = ref('')
     watch(props, props => {
       const codes = returnVoucherifyCodes(props.cart).map(code => JSON.parse(code))
       const lastAppliedCode = codes.find(code => code.code === form.value.code)
-      codesInfo.value = lastAppliedCode ? `${lastAppliedCode.status}${lastAppliedCode.status !== 'APPLIED' && lastAppliedCode.errMsg ? ' - ' + lastAppliedCode.errMsg : ''}` : ''
+      codesInfo.value = {
+        message: lastAppliedCode ? `${lastAppliedCode.status !== 'APPLIED' && lastAppliedCode.errMsg ? lastAppliedCode.errMsg : lastAppliedCode.status}` : '',
+        status: lastAppliedCode.status === 'APPLIED' ? true : false,
+      }
     })
 
 
