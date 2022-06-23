@@ -52,6 +52,12 @@ const query = gql`
               }
             }
           }
+          custom {
+            customFieldsRaw {
+              name
+              value
+            }
+          }
         }
         totalPrice {
           centAmount

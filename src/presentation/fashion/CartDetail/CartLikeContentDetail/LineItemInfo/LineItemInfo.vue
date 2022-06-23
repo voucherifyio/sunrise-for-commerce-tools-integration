@@ -41,6 +41,9 @@
         <span data-test="cart-line-item-sku">
           {{ lineItem.variant.sku }}
         </span>
+        <b class="discounted-quantity" v-if="quantityFromCode">
+          discounted: {{quantityFromCode}}
+        </b>
       </td>
       <td v-if="!selectable" class="product-price">
         <span class="amount" data-test="item-price">
