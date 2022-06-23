@@ -39,16 +39,31 @@
       />
     </div>
     <div class="cart-total-wrap">
-      <div class="single-cart-total-left col-sm-6">
-        <b>{{ t('total') }}</b>
+      <div class="row" v-if="discountValue.centAmount != 0">
+        <div class="single-cart-total-left col-sm-6">
+          <b>{{ t('discount') }}</b>
+        </div>
+        <div
+          class="single-cart-total-right col-sm-6"
+          data-test="cart-total-price"
+        >
+          <b>
+            <BasePrice :price="{ value: discountValue }" />
+          </b>
+        </div>
       </div>
-      <div
-        class="single-cart-total-right col-sm-6"
-        data-test="cart-total-price"
-      >
-        <b>
-          <BasePrice :price="{ value: cart.totalPrice }" />
-        </b>
+      <div class="row">
+        <div class="single-cart-total-left col-sm-6">
+          <b>{{ t('total') }}</b>
+        </div>
+        <div
+          class="single-cart-total-right col-sm-6"
+          data-test="cart-total-price"
+        >
+          <b>
+            <BasePrice :price="{ value: cart.totalPrice }" />
+          </b>
+        </div>
       </div>
     </div>
     <div class="grand-btn">

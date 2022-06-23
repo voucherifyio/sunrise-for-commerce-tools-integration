@@ -215,10 +215,13 @@ h3.cart-page-title {
     color: #262626;
   }
   .cart-total-wrap {
-    display: flex;
     border-top: 1px solid #dbdbdb;
     padding: 20px 0 0 0;
-    margin: 20px 0 37px 0;
+    margin: 20px 0 37px 0; 
+    .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
     .single-cart-total-left {
       padding: 0 !important;
     }
