@@ -116,7 +116,15 @@ const query = gql`
               name
               value
           }
-      }
+        }
+        customLineItems {
+          name(locale: $locale)
+          totalPrice {
+            centAmount
+            currencyCode
+            fractionDigits
+          }
+        }
       }
     }
   }
