@@ -1,8 +1,9 @@
 import { useI18n } from 'vue-i18n';
 import RemoveDiscountCodeForm from './RemoveDiscountCodeForm/RemoveDiscountCodeForm.vue';
+import BasePrice from 'presentation/components/BasePrice/BasePrice.vue';
 
 export default {
-  components: { RemoveDiscountCodeForm },
+  components: { RemoveDiscountCodeForm, BasePrice },
   props: {
     cart: {
       type: Object,
