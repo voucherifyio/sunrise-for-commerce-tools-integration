@@ -4,3 +4,13 @@
 .discount-code {
   font-weight: bold
 }
+.code-container {
+  display: flex;
+  flex-grow: 1;
+}
+.code-gap {
+  flex-grow: 1;
+}
+.code-value {
+  color: rgb(0,222,0);
+}

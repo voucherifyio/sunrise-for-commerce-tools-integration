@@ -13,9 +13,12 @@
       class="single-grand-total-right col-sm-6"
       data-test="discount-code-name"
     >
-        <div v-for="code in appliedCodes" :key="code">
+        <div class="code-container" v-for="code in appliedCodes" :key="code">
           <b >{{code.code}}</b>
-          <!-- <b>{{JSON.parse(code).value}}</b> -->
+          <b class="code-gap"></b>
+          <b class="code-value">
+            <BasePrice :price="{value: {centAmount: -code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
+          </b>
           <RemoveDiscountCodeForm
             v-if="editable"
             :cart="cart"
