@@ -22,4 +22,14 @@ export default {
     const { t } = useI18n();
     return { t, ...useCartTools() };
   },
+
+  computed: {
+    discountValue(props) {
+      const customLineItemWithDiscount = props.cart.customLineItems.find(item => item.name.startsWith('Voucher, '))
+      if(customLineItemWithDiscount) {
+        return customLineItemWithDiscount.totalPrice
+      }
+      return 0
+    }
+  }
 };
