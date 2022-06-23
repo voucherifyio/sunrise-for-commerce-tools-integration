@@ -52,4 +52,20 @@ export default {
       ...useCartTools(),
     };
   },
+
+  computed: {
+    quantityFromCode(props){
+      const codeWithFreeItem = props.lineItem.custom?.customFieldsRaw
+        .find(code => code.name === 'applied_codes')
+        .value
+        .map(code => JSON.parse(code))
+        .find(code => code.type === 'UNIT');
+
+      if(codeWithFreeItem) {
+        return codeWithFreeItem.quantity
+      }
+
+      return 0
+    }
+  }
 };

@@ -57,6 +57,12 @@ tr {
       display: block;
       line-height: 1;
     }
+
+    .discounted-quantity {
+      display: inline-block;
+      margin-top: 15px;
+      font-weight: 500;
+    }
   }
 
   td.product-price {
