@@ -57,12 +57,13 @@ export default {
     quantityFromCode(props){
       const codeWithFreeItem = props.lineItem.custom?.customFieldsRaw
         .find(code => code.name === 'applied_codes')
-        .value
-        .map(code => JSON.parse(code))
-        .find(code => code.type === 'UNIT');
-
+        
       if(codeWithFreeItem) {
-        return codeWithFreeItem.quantity
+        return codeWithFreeItem
+          .value
+          .map(code => JSON.parse(code))
+          .find(code => code.type === 'UNIT')
+          .totalDiscountQuantity
       }
 
       return 0
