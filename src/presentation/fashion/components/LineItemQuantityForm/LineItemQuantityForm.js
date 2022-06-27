@@ -1,4 +1,3 @@
-import { shallowRef, watch } from 'vue';
 import useCartTools from 'hooks/useCartTools';
 
 export default {
@@ -17,38 +16,26 @@ export default {
       required: false,
     },
   },
-  setup(props) {
-    const { changeLine: cl, removeLineItem: rm } =
-      useCartTools();
-    const quantity_ = shallowRef(props.quantity);
-    const changeLine = () =>
-      cl(props.lineItemId, quantity_.value);
-    const removeLineItem = () => rm(props.lineItemId);
-    watch(quantity_, (q) => {
-      if (q === '') {
-        return;
-      }
-      changeLine(q);
-      if (q <= 0) {
-        removeLineItem();
-      }
-    });
-    const changeLineItemQuantity = () => {
-      return changeLine(quantity_.value);
-    };
-    const increment = () => {
-      quantity_.value += 1;
-    };
-    const decrement = () => {
-      quantity_.value -= 1;
-    };
 
-    return {
-      quantity_,
-      increment,
-      decrement,
-      removeLineItem,
-      changeLineItemQuantity,
-    };
+  computed: {
+    quantity_: (props) => props.quantity
   },
+
+  setup(props) {
+    const { changeLine, removeLineItem } = useCartTools();
+
+    const increment = function() {
+      changeLine(props.lineItemId, props.quantity + 1)
+    }
+
+    const decrement = function() {
+      const decrementQuantity = props.quantity - 1
+
+      decrementQuantity <= 0 
+        ? removeLineItem(props.lineItemId)
+        : changeLine(props.lineItemId, decrementQuantity)
+    }
+
+    return {increment, decrement}
+  }
 };
