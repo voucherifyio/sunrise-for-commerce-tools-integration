@@ -22,7 +22,7 @@ export default {
   },
 
   setup(props) {
-    const { changeLine, removeLineItem } = useCartTools();
+    const { changeLine, removeLineItem: remove } = useCartTools();
 
     const increment = function() {
       changeLine(props.lineItemId, props.quantity + 1)
@@ -32,10 +32,14 @@ export default {
       const decrementQuantity = props.quantity - 1
 
       decrementQuantity <= 0 
-        ? removeLineItem(props.lineItemId)
+        ? remove(props.lineItemId)
         : changeLine(props.lineItemId, decrementQuantity)
     }
 
-    return {increment, decrement}
+    const removeLineItem = function() {
+      remove(props.lineItemId)
+    }
+
+    return {increment, decrement, removeLineItem}
   }
 };
