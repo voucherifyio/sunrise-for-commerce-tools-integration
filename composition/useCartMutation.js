@@ -75,7 +75,8 @@ export const useCartActions = () => {
     mutateCart(addDiscountCode(code));
   const applyVoucherifyDiscount = (code) =>
     mutateCart(addVoucherifyDiscountCode(code)); 
-  const applyRemoveVoucherifyDiscountCode = () => mutateCart(removeVoucherifyCode()) 
+  const applyRemoveVoucherifyDiscountCode = () => 
+    mutateCart(removeVoucherifyCode()) 
   const removeDiscount = (codeId) =>
     mutateCart(removeDiscountCode(codeId));
   const setShip = (shippingMethodId) =>
