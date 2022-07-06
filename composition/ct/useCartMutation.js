@@ -3,6 +3,8 @@ import { getValue } from '../../src/lib';
 import useMutation from '../useMutationFacade';
 import useCart from '../useCart';
 import gql from 'graphql-tag';
+import { AVAILABLE_CODES_NAMES } from '../../src/constants'
+
 const create = gql`
   mutation createCart($draft: MyCartDraft!) {
     createMyCart(draft: $draft) {
@@ -95,15 +97,15 @@ export const addDiscountCode = (code) => [
 export const addVoucherifyDiscountCode = (codes) => [
   {
     setCustomField: {
-      name: "discount_codes",
-      value: JSON.stringify( codes.map(code => JSON.stringify(code))) // codes.map(c => JSON.stringify(c)),
+      name: AVAILABLE_CODES_NAMES,
+      value: JSON.stringify( codes.map(code => JSON.stringify(code)))
     },
   },
 ];
 export const removeVoucherifyCode = () => [
   {
     setCustomField: {
-      name: "discount_codes",
+      name: AVAILABLE_CODES_NAMES,
     },
   },
 ];

@@ -8,3 +8,11 @@ export const DEFAULT_PAGE_SIZE = Number(
 );
 export const CUSTOMER = 'CUSTOMER';
 export const CHANNEL = 'CHANNEL';
+export const AVAILABLE_CODES_NAMES = {
+  DISCOUNT_CODES: 'discount_codes',
+}
+export const CODES_STATUSES = {
+  APPLIED: 'APPLIED',
+}
+export const CUSTOM_LINE_ITEM_VOUCHER_NAME = 'Voucher, '
+

@@ -36,6 +36,7 @@ export default {
     }, form)
 
     const applyDiscount = () => {
+      console.log(222);
       const codes = returnVoucherifyCodes(props.cart)
         .map(code => JSON.parse(code))
         .filter(code => ['APPLIED', 'NEW'].includes(code.status));
