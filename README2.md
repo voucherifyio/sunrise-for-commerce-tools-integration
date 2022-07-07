@@ -1,29 +1,74 @@
+# Requirements
+
+
 # Installation
 
-- clone repository
-- `npm install`
-- add `.env` file generated in Commerce Tools during creation of new API Client (select `Sunrise SPA` option)
-- consider importing test data into the Commerce Tools https://docs.commercetools.com/sdk/sunrise-data
-- `npm run start`
+* Clone repository
+* run command `npm install`
+* add `.env` file generated in Commerce Tools during creation of new API Client (select `Sunrise SPA` option)
+* run command `npm run dev` for development environment or `npm run build` for production 
 
+consider importing test data into the Commerce Tools https://docs.commercetools.com/sdk/sunrise-data
+
+**.env** example file
+```env
+VUE_APP_CT_PROJECT_KEY=
+VUE_APP_CT_CLIENT_ID=
+VUE_APP_CT_CLIENT_SECRET=
+VUE_APP_CT_SCOPE=
+VUE_APP_CT_AUTH_HOST=
+VUE_APP_CT_API_HOST=
+```
 
 # High level integration requirements
 
-## Cover use cases
+## Cover the following use cases
 
 To flawless work of your frontend application you need to cover a few use case
 - appliging single discount code to your cart
 - listing single or multiple discount codes applied (we provide support for single and multiple code as well) 
-- calculating discount and total value of your cart
 - removing codes from your cart
 - handle removing products of changing of their quantity (applied codes needs to be revalidated, some codes may be not able to apply after changes)
 - handle coupons that add new products to your cart
+
+In our example each action which is related to codes (adding, removing) and changning products in cart (adding, removing, changing quantity) mutate state of cart. Next by graphql query to Commerce Tools API we get data with codes validation results which can be shown in cart view.
 
 ## Graphql request changes
 
 Basic Graphql quary need to be extended due to recieving additional customFields where data about V% codes are stored.
 
 ### Request example
+
+> Adding codes 
+
+When you want to add new code by your AddDiscountCodeFrom you need to pass all used codes so far and new one 
+
+```js
+//each array element need to be stringified by JSON.stringify()
+const codes = [
+  {
+      "code": "UNIT_TYPE_CODE",
+      "status": "APPLIED"
+  }
+  {
+      "code": "50%OFF",
+      "status": "NEW"
+  }
+]
+```
+
+Then you need pass it to your graphql query through customField named "discount_codes" more here https://docs.commercetools.com/api/projects/custom-fields#customfields
+
+```js
+{
+  setCustomField: {
+    name: "discount_codes",
+    value: JSON.stringify(codes.map(code => JSON.stringify(code)))
+  },
+}
+```
+
+> Fetching cart data
 
 ```js
 query myCart($locale: Locale!) {
@@ -123,9 +168,9 @@ In purpose to use our commercetools example application Sunrise SPA https://gith
 you need to make some changes in code. You can simply use our Sunrise fork with following changes
 
 > **CartDetail.vue** is our main component related to cart. There is only single change - passing cart object to **AddDiscountCodeForm** component This component contains two main children where chagnes was realized. 
-- CartLikePriceDetail,
-- AddDiscountCodeForm,
-- CartLikeContentDetail
+> - CartLikePriceDetail,
+> - AddDiscountCodeForm,
+> - CartLikeContentDetail
 
 ```vue
 <AddDiscountCodeForm :cart="cart" />
@@ -356,8 +401,8 @@ export default {
       const lastAppliedCode = codes.find(code => code.code === enteredCode.value)
       if(lastAppliedCode) {
         codesInfo.value = {
-          message: lastAppliedCode ? `${lastAppliedCode.status !== 'APPLIED' && lastAppliedCode.errMsg ? lastAppliedCode.errMsg : lastAppliedCode.status}` : '',
-          status: lastAppliedCode.status === 'APPLIED' ? true : false,
+          message: lastAppliedCode ? `${lastAppliedCode.status !== CODES_STATUSES.APPLIED && lastAppliedCode.errMsg ? lastAppliedCode.errMsg : lastAppliedCode.status}` : '',
+          status: lastAppliedCode.status === CODES_STATUSES.APPLIED ? true : false,
         }
       }
     })
@@ -374,15 +419,11 @@ export default {
 };
 ```
 
-
-//HERE JS CHANGES
-
-
 ### CartLikeContentDetail
 
 #### CartLikeContentDetail/LimeItemInfo
 
-> here was shown a discount for single product
+> Here was shown a discount for single product
 
 > **LimeItemInfo.vue**
 
@@ -395,7 +436,7 @@ export default {
 </td>
 ```
 
-> In **LimeItemInfo.js** was added computed function quantityFromCode that return 
+> In **LimeItemInfo.js** was added computed function **quantityFromCode** that return unit type codes applied to products 
 
 ```js
 import { AVAILABLE_CODES_NAMES, CODES_TYPES } from '../../../../../constants'
@@ -447,16 +488,14 @@ de:
 
 ### Other changes
 
-> function that extends **useCartMutation.js** allowed to mark chagnes in application state
+> Functions that extends **useCartMutation.js** allowed to mark changes in codes used in cart and revalidate codes.
 
 ```js
 const applyVoucherifyDiscount = (code) =>
     mutateCart(addVoucherifyDiscountCode(code)); 
-const applyRemoveVoucherifyDiscountCode = () => 
-    mutateCart(removeVoucherifyCode()) 
 ```
 
-> functions in **composition/ct/useCartMutation.js** that are handles for changing in codes
+> Functions in **composition/ct/useCartMutation.js** which are handlers for changes in codes
 
 ```js
 import { AVAILABLE_CODES_NAMES } from '../../src/constants'
@@ -476,6 +515,29 @@ export const removeVoucherifyCode = () => [
     },
   },
 ];
+```
+
+> Functions in **composition/useCartTools.js** for checking if V% discount codes exist and for returning it.
+
+```js
+import { AVAILABLE_CODES_NAMES } from '../src/constants'
+(...)
+const discountVoucherifyCodesExist = (cart) => {
+  let codeExist = false;
+  cart.custom.customFieldsRaw.forEach(element => {
+    if(element.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES && element.value.length != 0) codeExist = true;
+  });
+  return codeExist
+};
+
+const returnVoucherifyCodes = (cart) => {
+  let voucherifyCodes = [];
+  cart.custom.customFieldsRaw.forEach(element => {
+    if(element.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES && element.value.length != 0) voucherifyCodes = element.value;
+  });
+  return voucherifyCodes;
+}
+(...)
 ```
 
 > Added new consts in **constants.js**
