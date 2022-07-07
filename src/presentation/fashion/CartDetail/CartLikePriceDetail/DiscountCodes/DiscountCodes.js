@@ -17,14 +17,13 @@ export default {
   },
   computed: {
     appliedCodes() {
-      console.log('cody = ', this.cart.custom?.customFieldsRaw);
       const appliedCodes = this.cart.custom?.customFieldsRaw
         .filter(field => field.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES)
         .reduce(customField => customField)
         .value
         .map(code => JSON.parse(code))
         .filter(code => code.status === CODES_STATUSES.APPLIED)
-
+      
       return appliedCodes.length ? appliedCodes : false
     }
   },

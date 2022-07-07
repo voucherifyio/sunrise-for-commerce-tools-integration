@@ -1,4 +1,6 @@
 en:
   available: "Available"
+  discounted: "Discounted"
 de:
   available: "Verfügbar"
+  discounted: "Ermäßigt"

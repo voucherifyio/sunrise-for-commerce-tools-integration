@@ -42,7 +42,7 @@
           {{ lineItem.variant.sku }}
         </span>
         <b class="discounted-quantity" v-if="quantityFromCode">
-          discounted: {{quantityFromCode}}
+           {{ t('discounted') }} : {{quantityFromCode}}
         </b>
       </td>
       <td v-if="!selectable" class="product-price">

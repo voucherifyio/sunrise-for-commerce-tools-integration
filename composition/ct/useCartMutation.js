@@ -97,7 +97,7 @@ export const addDiscountCode = (code) => [
 export const addVoucherifyDiscountCode = (codes) => [
   {
     setCustomField: {
-      name: AVAILABLE_CODES_NAMES,
+      name: AVAILABLE_CODES_NAMES.DISCOUNT_CODES,
       value: JSON.stringify( codes.map(code => JSON.stringify(code)))
     },
   },
@@ -105,7 +105,7 @@ export const addVoucherifyDiscountCode = (codes) => [
 export const removeVoucherifyCode = () => [
   {
     setCustomField: {
-      name: AVAILABLE_CODES_NAMES,
+      name: AVAILABLE_CODES_NAMES.DISCOUNT_CODES,
     },
   },
 ];
