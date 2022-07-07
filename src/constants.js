@@ -14,6 +14,7 @@ export const AVAILABLE_CODES_NAMES = {
 }
 export const CODES_STATUSES = {
   APPLIED: 'APPLIED',
+  NEW: 'NEW'
 }
 export const CODES_TYPES = {
   UNIT: 'UNIT',

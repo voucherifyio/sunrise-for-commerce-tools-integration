@@ -7,6 +7,7 @@ import useCartTools from 'hooks/useCartTools';
 // import useDiscountCode from 'hooks/useDiscountCode';
 import { ref, watch } from 'vue';
 import useVuelidate from '@vuelidate/core';
+import { CODES_STATUSES } from '../../../../constants'
 
 export default {
   components: {
@@ -36,14 +37,13 @@ export default {
     }, form)
 
     const applyDiscount = () => {
-      console.log(222);
       const codes = returnVoucherifyCodes(props.cart)
         .map(code => JSON.parse(code))
-        .filter(code => ['APPLIED', 'NEW'].includes(code.status));
+        .filter(code => Object.values(CODES_STATUSES).includes(code.status));
 
       enteredCode.value = form.value.code
       form.value.code = ''
-      return applyVoucherifyDiscount([...codes, { code: enteredCode.value, status: 'NEW' }])
+      return applyVoucherifyDiscount([...codes, { code: enteredCode.value, status: CODES_STATUSES.NEW }])
     };
 
     const getErrorMessage = ({ code }) => {
@@ -63,8 +63,6 @@ export default {
         }
       }
     })
-
-
 
     return {
       t,
