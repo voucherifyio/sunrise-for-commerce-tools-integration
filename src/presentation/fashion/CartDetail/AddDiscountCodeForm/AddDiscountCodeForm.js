@@ -58,8 +58,8 @@ export default {
       const lastAppliedCode = codes.find(code => code.code === enteredCode.value)
       if(lastAppliedCode) {
         codesInfo.value = {
-          message: lastAppliedCode ? `${lastAppliedCode.status !== 'APPLIED' && lastAppliedCode.errMsg ? lastAppliedCode.errMsg : lastAppliedCode.status}` : '',
-          status: lastAppliedCode.status === 'APPLIED' ? true : false,
+          message: lastAppliedCode ? `${lastAppliedCode.status !== CODES_STATUSES.APPLIED && lastAppliedCode.errMsg ? lastAppliedCode.errMsg : lastAppliedCode.status}` : '',
+          status: lastAppliedCode.status === CODES_STATUSES.APPLIED ? true : false,
         }
       }
     })

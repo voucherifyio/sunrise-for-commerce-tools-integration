@@ -96,9 +96,10 @@ export const addDiscountCode = (code) => [
 ];
 export const addVoucherifyDiscountCode = (codes) => [
   {
+
     setCustomField: {
       name: AVAILABLE_CODES_NAMES.DISCOUNT_CODES,
-      value: JSON.stringify( codes.map(code => JSON.stringify(code)))
+      value: JSON.stringify(codes.map(code => JSON.stringify(code)))
     },
   },
 ];
@@ -134,6 +135,7 @@ const useCartMutation = ({ location, currency }) => {
     useMutation(mutation);
   const [createCart] = useMutation(create);
   const { cart, exist } = useCart();
+  console.log(cart)
   const mutateCart = (actions) => {
     return Promise.resolve()
       .then(() => {
