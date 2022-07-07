@@ -21,67 +21,100 @@ To flawless work of your frontend application you need to cover a few use case
 
 ## Graphql request changes
 
-Basic Graphql quary need to be extended due to recieving additional data about V% coupons. E.g code below.
+Basic Graphql quary need to be extended due to recieving additional customFields where data about V% codes are stored.
 
-### Request
+### Request example
 
 ```js
 query myCart($locale: Locale!) {
-    myCart: me {
-        activeCart {
-            (...)
-            custom {
-                customFieldsRaw {
-                    name
-                    value
-                }
-            }
-            customLineItems {
-                name(locale: $locale)
-                totalPrice {
-                    centAmount
-                    currencyCode
-                    fractionDigits
-                }
-            }
+  myCart: me {
+    activeCart {
+      (...)
+      lineItems {
+        (...)
+        custom {
+          customFieldsRaw {
+            name
+            value
+          }
         }
+      }
+      (...)
+      custom {
+        customFieldsRaw {
+            name
+            value
+        }
+      }
+      customLineItems {
+        name(locale: $locale)
+        totalPrice {
+            centAmount
+            currencyCode
+            fractionDigits
+        }
+      }
     }
+  }
 }
 ```
 
-### Result
-
-> Result containst information about used codes in custom.customFieldsRaw and data about summary discount in customLineItems
+### Result example
 
 ```js
 {
-    custom: {
-        customFieldsRaw: {
-            name: "discount_codes",
-            //each value element needs to be parsed from stringified json to object
-            value: [
-                {
-                    code: "50%OFF",
-                    status:"APPLIED",
-                    value:21450
-                }
-            ]
+  activeCart {
+    (...)
+    lineItems {
+      (...)
+      custom {
+        customFieldsRaw {
+          "name": "applied_codes",
+          //each value element needs to be parsed from stringified json to object 
+          //"{\"code\":\"UNIT_TYPE_CODE\",\"type\":\"UNIT\",\"effect\":\"ADD_MISSING_ITEMS\",\"quantity\":1,\"totalDiscountQuantity\":1}"
+          "value": [
+            {
+              code: "UNIT_TYPE_CODE",
+              type: "UNIT",
+              effect: "ADD_MISSING_ITEMS",
+              quantity: 1,
+              totalDiscountQuantity: 1,
+            }
+          ]
         }
+      }
+    }
+    (...)
+    custom: {
+      customFieldsRaw: {
+        name: "discount_codes",
+        //each value element needs to be parsed from stringified json to object
+        //"{\"code\":\"UNIT_TYPE_CODE\",\"status\":\"APPLIED\",\"value\":17900}"
+        value: [
+          {
+              code: "UNIT_TYPE_CODE",
+              status: "APPLIED",
+              value: 17900
+          }
+        ]
+      }
     }
 
     customLineItems: {
-        "name": "Voucher, coupon value => 181.50",
-        "totalPrice": {
-            "centAmount": -18150,
-            "currencyCode": "EUR",
-            "fractionDigits": 2
-        }
+      "name": "Voucher, coupon value => 181.50",
+      "totalPrice": {
+          "centAmount": -18150,
+          "currencyCode": "EUR",
+          "fractionDigits": 2
+      }
     }
-
+  }
 }
 ```
 
-> Currently we handle only "discount_codes". If your code has status "APPLIED" it means that was validated correctly and applied discount to your cart.
+> activeCart.lineItems.custom.customFieldsRaw is commerce tools custom field that store data about codes applied for your products. Currently we handle "unit type" codes.
+> activeCart.custom.customFieldsRaw store information about each codes which was applied for Your cart.
+> activeCart.customLineItems there are information about your summary Voucher and currency detail
 
 
 # Changes in our sunrise fork
@@ -89,10 +122,10 @@ query myCart($locale: Locale!) {
 In purpose to use our commercetools example application Sunrise SPA https://github.com/commercetools/sunrise-spa with Voucherify integration
 you need to make some changes in code. You can simply use our Sunrise fork with following changes
 
-
 > CartDetail.vue is our main component related to cart. There is only single change - passing cart object to AddDiscountCodeForm component This component contains two main children where chagnes was realized. 
-- AddDiscountCodeForm,
 - CartLikePriceDetail,
+- AddDiscountCodeForm,
+- CartLikeContentDetail
 
 ```vue
 <AddDiscountCodeForm :cart="cart" />
@@ -102,42 +135,42 @@ you need to make some changes in code. You can simply use our Sunrise fork with 
 
 > In CartLikePriceDetail.vue DiscountCodes component was made dependen on discountVoucherifyCodesExist and template about discount was a bit changed
 ```vue
-    <div>
-        (...)
-        <DiscountCodes
-            v-if="discountVoucherifyCodesExist(cart)"
-            :cart="cart"
-            :editable="editable"
-        />
+<div>
+    (...)
+    <DiscountCodes
+        v-if="discountVoucherifyCodesExist(cart)"
+        :cart="cart"
+        :editable="editable"
+    />
+</div>
+<div class="cart-total-wrap">
+  <div class="row" v-if="discountValue.centAmount != 0">
+    <div class="single-cart-total-left col-sm-6">
+      <b>{{ t('discount') }}</b>
     </div>
-    <div class="cart-total-wrap">
-      <div class="row" v-if="discountValue.centAmount != 0">
-        <div class="single-cart-total-left col-sm-6">
-          <b>{{ t('discount') }}</b>
-        </div>
-        <div
-          class="single-cart-total-right col-sm-6"
-          data-test="cart-total-price"
-        >
-          <b>
-            <BasePrice :price="{ value: discountValue }" />
-          </b>
-        </div>
-      </div>
-      <div class="row">
-        <div class="single-cart-total-left col-sm-6">
-          <b>{{ t('total') }}</b>
-        </div>
-        <div
-          class="single-cart-total-right col-sm-6"
-          data-test="cart-total-price"
-        >
-          <b>
-            <BasePrice :price="{ value: cart.totalPrice }" />
-          </b>
-        </div>
-      </div>
+    <div
+      class="single-cart-total-right col-sm-6"
+      data-test="cart-total-price"
+    >
+      <b>
+        <BasePrice :price="{ value: discountValue }" />
+      </b>
     </div>
+  </div>
+  <div class="row">
+    <div class="single-cart-total-left col-sm-6">
+      <b>{{ t('total') }}</b>
+    </div>
+    <div
+      class="single-cart-total-right col-sm-6"
+      data-test="cart-total-price"
+    >
+      <b>
+        <BasePrice :price="{ value: cart.totalPrice }" />
+      </b>
+    </div>
+  </div>
+</div>
 ```
 
 > CartLikePriceDetail.js was extended by logic that allow to filter and get data about current applied voucher 
@@ -165,21 +198,21 @@ export default {
 ```js
 import { AVAILABLE_CODES_NAMES, CODES_STATUSES } from "../../../../../constants";
 export default {
-    components: { RemoveDiscountCodeForm, BasePrice },
-    (...)
-    computed: {
-        appliedCodes() {
-            const appliedCodes = this.cart.custom?.customFieldsRaw
-                .filter(field => field.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES)
-                .reduce(customField => customField)
-                .value
-                .map(code => JSON.parse(code))
-                .filter(code => code.status === CODES_STATUSES.APPLIED)
+  components: { RemoveDiscountCodeForm, BasePrice },
+  (...)
+  computed: {
+    appliedCodes() {
+        const appliedCodes = this.cart.custom?.customFieldsRaw
+            .filter(field => field.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES)
+            .reduce(customField => customField)
+            .value
+            .map(code => JSON.parse(code))
+            .filter(code => code.status === CODES_STATUSES.APPLIED)
 
-            return appliedCodes.length ? appliedCodes : false
-        }
-    },
-    (...)
+        return appliedCodes.length ? appliedCodes : false
+    }
+  },
+  (...)
 }
 ```
 
@@ -194,7 +227,7 @@ export default {
       class="single-grand-total-right col-sm-6"
       data-test="discount-code-name"
     >
-        <div class="code-container" v-for="code in appliedCodes" :key="code">
+        <div class="row code-container" v-for="code in appliedCodes" :key="code">
           <b >{{code.code}}</b>
           <b class="code-gap"></b>
           <b class="code-value">
@@ -211,54 +244,139 @@ export default {
 </template>
 ```
 
+> In DiscountCodes/style.css style was added
+```css
+.code-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+}
+.code-gap {
+  flex-grow: 1;
+}
+.code-value {
+  color: rgb(0,222,0);
+}
+```
+
 #### CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm
 
 > RemoveDiscountCodeForm.js extended logic allowed to remove codes with on click method binded in RemoveDiscountCodeForm.vue
 ```js 
 setup(props) {
-    const {
-    returnVoucherifyCodes,
-    applyVoucherifyDiscount,
-    } = useCartTools();
+  const {
+  returnVoucherifyCodes,
+  applyVoucherifyDiscount,
+  } = useCartTools();
 
-    const removeDiscount = () => {
-    const codes = returnVoucherifyCodes(props.cart)
-        .map(code => JSON.parse(code))
-        .filter(code => code.code != props.code)
-        
-    applyVoucherifyDiscount(codes)
-    };
-    return { removeDiscount };
+  const removeDiscount = () => {
+  const codes = returnVoucherifyCodes(props.cart)
+      .map(code => JSON.parse(code))
+      .filter(code => code.code != props.code)
+      
+  applyVoucherifyDiscount(codes)
+  };
+  return { removeDiscount };
 },
 ```
+
+### AddDiscountCodeForm
 
 > In AddDiscountCodeForm.vue component ServeError was replaced from
 ```vue
 <ServerError
-    :error="error"
-    v-slot="{ graphQLError }"
-    class="server-error"
-    >{{ getErrorMessage(graphQLError) }}
+  :error="error"
+  v-slot="{ graphQLError }"
+  class="server-error"
+  >{{ getErrorMessage(graphQLError) }}
 </ServerError>
 ```
 > to
 ```vue
 <p class="message" :class="{ 'voucher-error': !codesInfo.status }">
-    {{codesInfo.message}}
+  {{codesInfo.message}}
 </p>
 ```
 
-### AddDiscountCodeForm
 
+//HERE JS CHANGES
+
+
+### CartLikeContentDetail
+
+#### CartLikeContentDetail/LimeItemInfo
+
+> here was shown a discount for single product
+
+> LimeItemInfo.vue
+
+```vue
+<td class="product-name">
+  (...)
+  <b class="discounted-quantity" v-if="quantityFromCode">
+    {{ t('discounted') }} : {{quantityFromCode}}
+  </b>
+</td>
+```
+
+> In LimeItemInfo.js was added computed function quantityFromCode that return 
+
+```js
+import { AVAILABLE_CODES_NAMES, CODES_TYPES } from '../../../../../constants'
+import { useI18n } from 'vue-i18n';
+
+export default {
+  (...)
+  setup(props, { emit }) {
+    (...)
+    const { t } = useI18n();
+
+    return {
+      t,
+      selected,
+      item,
+      ...useCartTools(),
+    };
+  }
+  (...)
+  computed: {
+    quantityFromCode(props){
+      const codeWithFreeItem = props.lineItem.custom?.customFieldsRaw
+          .find(code => code.name === AVAILABLE_CODES_NAMES.APPLIED_CODES)
+          
+      if(codeWithFreeItem) {
+          return codeWithFreeItem
+          .value
+          .map(code => JSON.parse(code))
+          .find(code => code.type === CODES_TYPES.UNIT)
+          .totalDiscountQuantity
+      }
+
+      return 0
+    }
+  }
+}
+```
+
+> in LimeItemInfo.txt new translate was added
+
+```txt
+en:
+  available: "Available"
+  discounted: "Discounted"
+de:
+  available: "Verfügbar"
+  discounted: "Ermäßigt"
+```
 
 ### Other changes
 
 > function that extends useCartMutation.js allowed to mark chagnes in application state
 
 ```js
-  const applyVoucherifyDiscount = (code) =>
+const applyVoucherifyDiscount = (code) =>
     mutateCart(addVoucherifyDiscountCode(code)); 
-  const applyRemoveVoucherifyDiscountCode = () => 
+const applyRemoveVoucherifyDiscountCode = () => 
     mutateCart(removeVoucherifyCode()) 
 ```
 
@@ -282,5 +400,23 @@ export const removeVoucherifyCode = () => [
     },
   },
 ];
+```
+
+> Added new consts in constants.js
+
+```js
+(...)
+export const AVAILABLE_CODES_NAMES = {
+  DISCOUNT_CODES: 'discount_codes',
+  APPLIED_CODES: 'applied_codes',
+}
+export const CODES_STATUSES = {
+  APPLIED: 'APPLIED',
+}
+export const CODES_TYPES = {
+  UNIT: 'UNIT',
+}
+export const CUSTOM_LINE_ITEM_VOUCHER_NAME = 'Voucher, '
+
 ```
 
