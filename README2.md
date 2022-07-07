@@ -112,9 +112,9 @@ query myCart($locale: Locale!) {
 }
 ```
 
-> activeCart.lineItems.custom.customFieldsRaw is commerce tools custom field that store data about codes applied for your products. Currently we handle "unit type" codes.
-> activeCart.custom.customFieldsRaw store information about each codes which was applied for Your cart.
-> activeCart.customLineItems there are information about your summary Voucher and currency detail
+> **activeCart.lineItems.custom.customFieldsRaw** is commerce tools custom field that store data about codes applied for your products. Currently we handle "unit type" codes.
+> **activeCart.custom.customFieldsRaw** store information about each codes which was applied for Your cart.
+> **activeCart.customLineItems** there are information about your summary Voucher and currency detail
 
 
 # Changes in our sunrise fork
@@ -122,7 +122,7 @@ query myCart($locale: Locale!) {
 In purpose to use our commercetools example application Sunrise SPA https://github.com/commercetools/sunrise-spa with Voucherify integration
 you need to make some changes in code. You can simply use our Sunrise fork with following changes
 
-> CartDetail.vue is our main component related to cart. There is only single change - passing cart object to AddDiscountCodeForm component This component contains two main children where chagnes was realized. 
+> **CartDetail.vue** is our main component related to cart. There is only single change - passing cart object to **AddDiscountCodeForm** component This component contains two main children where chagnes was realized. 
 - CartLikePriceDetail,
 - AddDiscountCodeForm,
 - CartLikeContentDetail
@@ -133,7 +133,7 @@ you need to make some changes in code. You can simply use our Sunrise fork with 
 
 ### CartLikePriceDetail
 
-> In CartLikePriceDetail.vue DiscountCodes component was made dependen on discountVoucherifyCodesExist and template about discount was a bit changed
+> In **CartLikePriceDetail.vue** DiscountCodes component was made dependen on discountVoucherifyCodesExist and template about discount was a bit changed
 ```vue
 <div>
     (...)
@@ -173,7 +173,7 @@ you need to make some changes in code. You can simply use our Sunrise fork with 
 </div>
 ```
 
-> CartLikePriceDetail.js was extended by logic that allow to filter and get data about current applied voucher 
+> **CartLikePriceDetail.js** was extended by logic that allow to filter and get data about current applied voucher 
 
 ```js
 import {CUSTOM_LINE_ITEM_VOUCHER_NAME} from '../../../../constants'
@@ -194,7 +194,7 @@ export default {
 
 #### CartLikePriceDetail/DiscountCodes
 
-> DiscountCodes.js was extended by computed property which map V% codes and component BasePrice
+> **DiscountCodes.js** was extended by computed property which map V% codes and component **BasePrice**
 ```js
 import { AVAILABLE_CODES_NAMES, CODES_STATUSES } from "../../../../../constants";
 export default {
@@ -216,7 +216,7 @@ export default {
 }
 ```
 
-> DiscountCodes.vue template was changed a bit, added usage of BasePrice component and maping for appliedCodes from computed property
+> **DiscountCodes.vue** template was changed a bit, added usage of **BasePrice** component and maping for appliedCodes from computed property
 ```vue
 <template>
   <div class="single-grand-total" v-if="appliedCodes">
@@ -244,7 +244,7 @@ export default {
 </template>
 ```
 
-> In DiscountCodes/style.css style was added
+> In **DiscountCodes/style.css** style was added
 ```css
 .code-container {
   display: flex;
@@ -261,7 +261,7 @@ export default {
 
 #### CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm
 
-> RemoveDiscountCodeForm.js extended logic allowed to remove codes with on click method binded in RemoveDiscountCodeForm.vue
+> **RemoveDiscountCodeForm.js** extended logic allowed to remove codes with on click method binded in **RemoveDiscountCodeForm.vue**
 ```js 
 setup(props) {
   const {
@@ -282,7 +282,7 @@ setup(props) {
 
 ### AddDiscountCodeForm
 
-> In AddDiscountCodeForm.vue component ServeError was replaced from
+> In **AddDiscountCodeForm.vue** component ServeError was replaced from
 ```vue
 <ServerError
   :error="error"
@@ -299,6 +299,82 @@ setup(props) {
 ```
 
 
+> In **AddDiscountCodeForm.js** there are new logic for adding V% codes in applyDiscount() and watch that handle errors in added codes.
+
+```js
+(...)
+import { ref, watch } from 'vue';
+import useVuelidate from '@vuelidate/core';
+import { CODES_STATUSES } from '../../../../constants'
+
+export default {
+  components: {
+    BaseForm,
+    BaseInput,
+    ServerError,
+  },
+  props: {
+    cart: {
+      type: Object,
+      required: true,
+    },
+  },
+  setup(props) {
+    const codesInfo = ref({})
+    const enteredCode = ref('')
+    const { t } = useI18n();
+    const {
+      applyVoucherifyDiscount,
+      returnVoucherifyCodes,
+    } = useCartTools();
+
+    const form = ref({});
+
+    const v = useVuelidate({
+      code: {}
+    }, form)
+
+    const applyDiscount = () => {
+      const codes = returnVoucherifyCodes(props.cart)
+        .map(code => JSON.parse(code))
+        .filter(code => Object.values(CODES_STATUSES).includes(code.status));
+
+      enteredCode.value = form.value.code
+      form.value.code = ''
+      return applyVoucherifyDiscount([...codes, { code: enteredCode.value, status: CODES_STATUSES.NEW }])
+    };
+
+    const getErrorMessage = ({ code }) => {
+      if (code === 'DiscountCodeNonApplicable') {
+        return t('nonApplicable');
+      }
+      return t('unknownError');
+    };
+
+    watch(props, props => {
+      const codes = returnVoucherifyCodes(props.cart).map(code => JSON.parse(code))
+      const lastAppliedCode = codes.find(code => code.code === enteredCode.value)
+      if(lastAppliedCode) {
+        codesInfo.value = {
+          message: lastAppliedCode ? `${lastAppliedCode.status !== 'APPLIED' && lastAppliedCode.errMsg ? lastAppliedCode.errMsg : lastAppliedCode.status}` : '',
+          status: lastAppliedCode.status === 'APPLIED' ? true : false,
+        }
+      }
+    })
+
+    return {
+      t,
+      applyDiscount,
+      form,
+      codesInfo,
+      getErrorMessage,
+      v,
+    };
+  },
+};
+```
+
+
 //HERE JS CHANGES
 
 
@@ -308,7 +384,7 @@ setup(props) {
 
 > here was shown a discount for single product
 
-> LimeItemInfo.vue
+> **LimeItemInfo.vue**
 
 ```vue
 <td class="product-name">
@@ -319,7 +395,7 @@ setup(props) {
 </td>
 ```
 
-> In LimeItemInfo.js was added computed function quantityFromCode that return 
+> In **LimeItemInfo.js** was added computed function quantityFromCode that return 
 
 ```js
 import { AVAILABLE_CODES_NAMES, CODES_TYPES } from '../../../../../constants'
@@ -358,7 +434,7 @@ export default {
 }
 ```
 
-> in LimeItemInfo.txt new translate was added
+> in **LimeItemInfo.txt** new translate was added
 
 ```txt
 en:
@@ -371,7 +447,7 @@ de:
 
 ### Other changes
 
-> function that extends useCartMutation.js allowed to mark chagnes in application state
+> function that extends **useCartMutation.js** allowed to mark chagnes in application state
 
 ```js
 const applyVoucherifyDiscount = (code) =>
@@ -380,7 +456,7 @@ const applyRemoveVoucherifyDiscountCode = () =>
     mutateCart(removeVoucherifyCode()) 
 ```
 
-> functions in composition/ct/useCartMutation.js that are handles for changing in codes
+> functions in **composition/ct/useCartMutation.js** that are handles for changing in codes
 
 ```js
 import { AVAILABLE_CODES_NAMES } from '../../src/constants'
@@ -402,7 +478,7 @@ export const removeVoucherifyCode = () => [
 ];
 ```
 
-> Added new consts in constants.js
+> Added new consts in **constants.js**
 
 ```js
 (...)
@@ -412,11 +488,11 @@ export const AVAILABLE_CODES_NAMES = {
 }
 export const CODES_STATUSES = {
   APPLIED: 'APPLIED',
+  NEW: 'NEW'
 }
 export const CODES_TYPES = {
   UNIT: 'UNIT',
 }
 export const CUSTOM_LINE_ITEM_VOUCHER_NAME = 'Voucher, '
-
 ```
 
