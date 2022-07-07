@@ -1,5 +1,7 @@
-# Requirements
+# Dependencies
 
+- Node.js >= 16.15.0
+- npm >= 8.5.5
 
 # Installation
 
