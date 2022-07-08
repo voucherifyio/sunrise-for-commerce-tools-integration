@@ -1,6 +1,12 @@
 # sunrise-for-commerce-tools-integration
 
-This repository is a fork from Sunrise SPA which extends it by features that allows you use codes provided by Voucherify application via Commerce Tools integration.
+This repository is a fork from [Sunrise SPA](https://github.com/commercetools/sunrise-spa) which extends it by features that allows you use codes provided by (Voucherify application)[ttps://www.voucherify.io] via (Commerce Tools integration)[https://github.com/voucherifyio/commerce-tools-integration].
+
+## Table of Contents
+
+1. [Related applications](#related-applications)
+2. [Prerequisites](#prerequisites)
+
 
 ## Related applications
 
