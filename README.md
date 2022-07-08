@@ -1,15 +1,37 @@
-# Dependencies
+# sunrise-for-commerce-tools-integration
+
+This repository is a fork from Sunrise SPA which extends it by features that allows you use codes provided by Voucherify application via Commerce Tools integration.
+
+## Related applications
+
+- Voucherify https://www.voucherify.io
+- Sunrise SPA https://github.com/commercetools/sunrise-spa
+- Commerce Tools https://commercetools.com/?location=emea
+- Commerce Tools Integration https://github.com/voucherifyio/commerce-tools-integration
+
+## Prerequisites
+
+Before you begin, ensure you have following requirements
+
+- Voucherify account and valid API keys
+- Commerce Tools account with created API Client and valid API keys
+- Hosted Commerce Tools Integration 
+
+## Dependencies
 
 - Node.js >= 16.15.0
 - npm >= 8.5.5
 
-# Installation
+## Installation
 
-* Clone repository
-* run command `npm install`
-* add `.env` file generated in Commerce Tools during creation of new API Client (select `Sunrise SPA` option)
-* run command `npm run dev` for development environment or `npm run build` for production 
+To install follow these steps:
 
+Windows, Linux and macOS:
+>* Clone repository
+>* run command `npm install`
+>* add `.env` file generated in Commerce Tools during creation of new API Client (select `Sunrise SPA` option)
+>* run command `npm run dev` for development environment or `npm run build` for production 
+>
 > consider importing test data into the Commerce Tools https://docs.commercetools.com/sdk/sunrise-data
 
 **.env** example file
@@ -22,9 +44,17 @@ VUE_APP_CT_AUTH_HOST=
 VUE_APP_CT_API_HOST=
 ```
 
-# High level integration requirements
+## Contact
 
-## Cover the following use cases
+Use our contact form https://www.voucherify.io/contact-sales
+
+## Licence
+
+This project uses the following license: 
+
+## High level integration requirements
+
+### Cover the following use cases
 
 To flawless work of your frontend application you need to cover a few use case
 - appliging single discount code to your cart
@@ -35,18 +65,18 @@ To flawless work of your frontend application you need to cover a few use case
 
 In our example each action which is related to codes (adding, removing) and changning products in cart (adding, removing, changing quantity) mutate state of cart. Next by graphql query to Commerce Tools API we get data with codes validation results which can be shown in cart view.
 
-## Graphql request changes
+### Graphql request changes
 
 Basic Graphql quary need to be extended due to recieving additional customFields where data about V% codes are stored.
 
-### Request example
+#### Request example
 
-> Adding codes 
+##### Adding codes 
 
 When you want to add new code by your AddDiscountCodeFrom you need to pass all used codes so far and new one 
 
 ```js
-//each array element need to be stringified by JSON.stringify()
+// Each array element need to be stringified by JSON.stringify()
 const codes = [
   {
       "code": "UNIT_TYPE_CODE",
@@ -70,7 +100,7 @@ Then you need pass it to your graphql query through customField named "discount_
 }
 ```
 
-> Fetching cart data
+##### Fetching cart data
 
 ```js
 query myCart($locale: Locale!) {
@@ -106,7 +136,7 @@ query myCart($locale: Locale!) {
 }
 ```
 
-### Result example
+#### Result example
 
 ```js
 {
@@ -117,8 +147,8 @@ query myCart($locale: Locale!) {
       custom {
         customFieldsRaw {
           "name": "applied_codes",
-          //each value element needs to be parsed from stringified json to object 
-          //"{\"code\":\"UNIT_TYPE_CODE\",\"type\":\"UNIT\",\"effect\":\"ADD_MISSING_ITEMS\",\"quantity\":1,\"totalDiscountQuantity\":1}"
+          // Each value element needs to be parsed from stringified json to object 
+          // "{\"code\":\"UNIT_TYPE_CODE\",\"type\":\"UNIT\",\"effect\":\"ADD_MISSING_ITEMS\",\"quantity\":1,\"totalDiscountQuantity\":1}"
           "value": [
             {
               code: "UNIT_TYPE_CODE",
@@ -135,8 +165,8 @@ query myCart($locale: Locale!) {
     custom: {
       customFieldsRaw: {
         name: "discount_codes",
-        //each value element needs to be parsed from stringified json to object
-        //"{\"code\":\"UNIT_TYPE_CODE\",\"status\":\"APPLIED\",\"value\":17900}"
+        // Each value element needs to be parsed from stringified json to object
+        // "{\"code\":\"UNIT_TYPE_CODE\",\"status\":\"APPLIED\",\"value\":17900}"
         value: [
           {
               code: "UNIT_TYPE_CODE",
@@ -164,23 +194,24 @@ query myCart($locale: Locale!) {
 > **activeCart.customLineItems** there are information about your summary Voucher and currency detail
 
 
-# Changes in our sunrise fork
+## Changes in our sunrise fork
 
 In purpose to use our commercetools example application Sunrise SPA https://github.com/commercetools/sunrise-spa with Voucherify integration
 you need to make some changes in code. You can simply use our Sunrise fork with following changes
 
-> **CartDetail.vue** is our main component related to cart. There is only single change - passing cart object to **AddDiscountCodeForm** component This component contains two main children where chagnes was realized. 
-> - CartLikePriceDetail,
-> - AddDiscountCodeForm,
-> - CartLikeContentDetail
+**CartDetail.vue** is our main component related to cart. There is only single change - passing cart object to **AddDiscountCodeForm** component This component contains there main children where chagnes was realized. 
+- CartLikePriceDetail,
+- AddDiscountCodeForm,
+- CartLikeContentDetail
 
 ```vue
 <AddDiscountCodeForm :cart="cart" />
 ```
 
-### CartLikePriceDetail
+#### CartLikePriceDetail
 
-> In **CartLikePriceDetail.vue** DiscountCodes component was made dependen on discountVoucherifyCodesExist and template about discount was a bit changed
+In **CartLikePriceDetail.vue** DiscountCodes component was made dependen on discountVoucherifyCodesExist and template about discount was a bit changed
+
 ```vue
 <div>
     (...)
@@ -220,7 +251,7 @@ you need to make some changes in code. You can simply use our Sunrise fork with 
 </div>
 ```
 
-> **CartLikePriceDetail.js** was extended by logic that allow to filter and get data about current applied voucher 
+**CartLikePriceDetail.js** was extended by logic that allow to filter and get data about current applied voucher 
 
 ```js
 import {CUSTOM_LINE_ITEM_VOUCHER_NAME} from '../../../../constants'
@@ -239,7 +270,7 @@ export default {
 };
 ```
 
-#### CartLikePriceDetail/DiscountCodes
+##### CartLikePriceDetail/DiscountCodes
 
 > **DiscountCodes.js** was extended by computed property which map V% codes and component **BasePrice**
 ```js
@@ -263,7 +294,8 @@ export default {
 }
 ```
 
-> **DiscountCodes.vue** template was changed a bit, added usage of **BasePrice** component and maping for appliedCodes from computed property
+**DiscountCodes.vue** template was changed a bit, added usage of **BasePrice** component and maping for appliedCodes from computed property
+
 ```vue
 <template>
   <div class="single-grand-total" v-if="appliedCodes">
@@ -291,7 +323,8 @@ export default {
 </template>
 ```
 
-> In **DiscountCodes/style.css** style was added
+In **DiscountCodes/style.css** style was added
+
 ```css
 .code-container {
   display: flex;
@@ -306,9 +339,10 @@ export default {
 }
 ```
 
-#### CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm
+##### CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm
 
-> **RemoveDiscountCodeForm.js** extended logic allowed to remove codes with on click method binded in **RemoveDiscountCodeForm.vue**
+**RemoveDiscountCodeForm.js** extended logic allowed to remove codes with on click method binded in **RemoveDiscountCodeForm.vue**
+
 ```js 
 setup(props) {
   const {
@@ -327,9 +361,10 @@ setup(props) {
 },
 ```
 
-### AddDiscountCodeForm
+#### AddDiscountCodeForm
 
-> In **AddDiscountCodeForm.vue** component ServeError was replaced from
+In **AddDiscountCodeForm.vue** component ServeError was replaced from
+
 ```vue
 <ServerError
   :error="error"
@@ -345,8 +380,7 @@ setup(props) {
 </p>
 ```
 
-
-> In **AddDiscountCodeForm.js** there are new logic for adding V% codes in applyDiscount() and watch that handle errors in added codes.
+In **AddDiscountCodeForm.js** there are new logic for adding V% codes in applyDiscount() and watch that handle errors in added codes.
 
 ```js
 (...)
@@ -421,13 +455,13 @@ export default {
 };
 ```
 
-### CartLikeContentDetail
+#### CartLikeContentDetail
 
-#### CartLikeContentDetail/LimeItemInfo
+##### CartLikeContentDetail/LimeItemInfo
 
-> Here was shown a discount for single product
+Here was shown a discount for single product
 
-> **LimeItemInfo.vue**
+**LimeItemInfo.vue**
 
 ```vue
 <td class="product-name">
@@ -438,7 +472,7 @@ export default {
 </td>
 ```
 
-> In **LimeItemInfo.js** was added computed function **quantityFromCode** that return unit type codes applied to products 
+In **LimeItemInfo.js** was added computed function **quantityFromCode** that return unit type codes applied to products 
 
 ```js
 import { AVAILABLE_CODES_NAMES, CODES_TYPES } from '../../../../../constants'
@@ -477,7 +511,7 @@ export default {
 }
 ```
 
-> in **LimeItemInfo.txt** new translate was added
+In **LimeItemInfo.txt** new translate was added
 
 ```txt
 en:
@@ -488,16 +522,16 @@ de:
   discounted: "Ermäßigt"
 ```
 
-### Other changes
+#### Other changes
 
-> Functions that extends **useCartMutation.js** allowed to mark changes in codes used in cart and revalidate codes.
+Functions that extends **useCartMutation.js** allowed to mark changes in codes used in cart and revalidate codes.
 
 ```js
 const applyVoucherifyDiscount = (code) =>
     mutateCart(addVoucherifyDiscountCode(code)); 
 ```
 
-> Functions in **composition/ct/useCartMutation.js** which are handlers for changes in codes
+Functions in **composition/ct/useCartMutation.js** which are handlers for changes in codes
 
 ```js
 import { AVAILABLE_CODES_NAMES } from '../../src/constants'
@@ -519,7 +553,7 @@ export const removeVoucherifyCode = () => [
 ];
 ```
 
-> Functions in **composition/useCartTools.js** for checking if V% discount codes exist and for returning it.
+Functions in **composition/useCartTools.js** for checking if V% discount codes exist and for returning it.
 
 ```js
 import { AVAILABLE_CODES_NAMES } from '../src/constants'
@@ -542,7 +576,7 @@ const returnVoucherifyCodes = (cart) => {
 (...)
 ```
 
-> Added new consts in **constants.js**
+Added new consts in **constants.js**
 
 ```js
 (...)

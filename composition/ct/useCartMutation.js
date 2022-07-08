@@ -135,7 +135,7 @@ const useCartMutation = ({ location, currency }) => {
     useMutation(mutation);
   const [createCart] = useMutation(create);
   const { cart, exist } = useCart();
-  console.log(cart)
+
   const mutateCart = (actions) => {
     return Promise.resolve()
       .then(() => {
