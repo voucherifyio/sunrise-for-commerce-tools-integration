@@ -8,21 +8,21 @@
 6. [Contact](#contact)
 7. [Licence](#licence)
 8. [High level integration requirements](#high-level-integration-requirements)
-  8.1 [Cover the following use cases](#cover-the-following-use-cases)
-  8.2 [Graphql request changes](#graphql-request-changes)
-  8.3 [Request example](#request-example)
-  8.4 [Result example](#result-example)
+  * [Cover the following use cases](#cover-the-following-use-cases)
+  * [Graphql request changes](#graphql-request-changes)
+  * [Request example](#request-example)
+  * [Result example](#result-example)
 9. [Changes in our sunrise fork](#changes-in-our-sunrise-fork)
-  9.1 [CartLikePriceDetail](#cartlikepricedetail)
-  9.2 [CartLikePriceDetail/DiscountCodes](#cartlikepricedetaildiscountcodes)
-  9.3 [CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm](#cartlikepricedetaildiscountcodesremovediscountcodeform)
-  9.4 [AddDiscountCodeForm](#adddiscountcodeform)
-  9.5 [CartLikeContentDetail/LimeItemInfo](#cartlikecontentdetaillimeiteminfo)
-  9.6 [Other changes](#other-changes)
+  * [CartLikePriceDetail](#cartlikepricedetail)
+  * [CartLikePriceDetail/DiscountCodes](#cartlikepricedetaildiscountcodes)
+  * [CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm](#cartlikepricedetaildiscountcodesremovediscountcodeform)
+  * [AddDiscountCodeForm](#adddiscountcodeform)
+  * [CartLikeContentDetail/LimeItemInfo](#cartlikecontentdetaillimeiteminfo)
+  * [Other changes](#other-changes)
 
 # sunrise-for-commerce-tools-integration
 
-This repository is a fork from [Sunrise SPA](https://github.com/commercetools/sunrise-spa) which extends it by features that allows you use codes provided by (Voucherify application)[ttps://www.voucherify.io] via (Commerce Tools integration)[https://github.com/voucherifyio/commerce-tools-integration].
+This repository is a fork from Sunrise SPA which extends it by features that allows you use codes provided by Voucherify application via Commerce Tools integration.
 
 ## Related applications
 
