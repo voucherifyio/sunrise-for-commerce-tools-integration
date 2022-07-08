@@ -1,12 +1,28 @@
+## Table of Contents
+
+1. [sunrise-for-commerce-tools-integration](#sunrise-for-commerce-tools-integration)
+2. [Related applications](#related-applications)
+3. [Prerequisites](#prerequisites)
+4. [Dependencies](#Dependencies)
+5. [Installation](#Installation)
+6. [Contact](#contact)
+7. [Licence](#licence)
+8. [High level integration requirements](#high-level-integration-requirements)
+  8.1 [Cover the following use cases](#cover-the-following-use-cases)
+  8.2 [Graphql request changes](#graphql-request-changes)
+  8.3 [Request example](#request-example)
+  8.4 [Result example](#result-example)
+9. [Changes in our sunrise fork](#changes-in-our-sunrise-fork)
+  9.1 [CartLikePriceDetail](#cartlikepricedetail)
+  9.2 [CartLikePriceDetail/DiscountCodes](#cartlikepricedetaildiscountcodes)
+  9.3 [CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm](#cartlikepricedetaildiscountcodesremovediscountcodeform)
+  9.4 [AddDiscountCodeForm](#adddiscountcodeform)
+  9.5 [CartLikeContentDetail/LimeItemInfo](#cartlikecontentdetaillimeiteminfo)
+  9.6 [Other changes](#other-changes)
+
 # sunrise-for-commerce-tools-integration
 
 This repository is a fork from [Sunrise SPA](https://github.com/commercetools/sunrise-spa) which extends it by features that allows you use codes provided by (Voucherify application)[ttps://www.voucherify.io] via (Commerce Tools integration)[https://github.com/voucherifyio/commerce-tools-integration].
-
-## Table of Contents
-
-1. [Related applications](#related-applications)
-2. [Prerequisites](#prerequisites)
-
 
 ## Related applications
 
@@ -75,9 +91,9 @@ In our example each action which is related to codes (adding, removing) and chan
 
 Basic Graphql quary need to be extended due to recieving additional customFields where data about V% codes are stored.
 
-#### Request example
+### Request example
 
-##### Adding codes 
+#### Adding codes 
 
 When you want to add new code by your AddDiscountCodeFrom you need to pass all used codes so far and new one 
 
@@ -106,7 +122,7 @@ Then you need pass it to your graphql query through customField named "discount_
 }
 ```
 
-##### Fetching cart data
+#### Fetching cart data
 
 ```js
 query myCart($locale: Locale!) {
@@ -142,7 +158,7 @@ query myCart($locale: Locale!) {
 }
 ```
 
-#### Result example
+### Result example
 
 ```js
 {
@@ -214,7 +230,7 @@ you need to make some changes in code. You can simply use our Sunrise fork with 
 <AddDiscountCodeForm :cart="cart" />
 ```
 
-#### CartLikePriceDetail
+### CartLikePriceDetail
 
 In **CartLikePriceDetail.vue** DiscountCodes component was made dependen on discountVoucherifyCodesExist and template about discount was a bit changed
 
@@ -276,7 +292,7 @@ export default {
 };
 ```
 
-##### CartLikePriceDetail/DiscountCodes
+### CartLikePriceDetail/DiscountCodes
 
 > **DiscountCodes.js** was extended by computed property which map V% codes and component **BasePrice**
 ```js
@@ -345,7 +361,7 @@ In **DiscountCodes/style.css** style was added
 }
 ```
 
-##### CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm
+### CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm
 
 **RemoveDiscountCodeForm.js** extended logic allowed to remove codes with on click method binded in **RemoveDiscountCodeForm.vue**
 
@@ -367,7 +383,7 @@ setup(props) {
 },
 ```
 
-#### AddDiscountCodeForm
+### AddDiscountCodeForm
 
 In **AddDiscountCodeForm.vue** component ServeError was replaced from
 
@@ -461,9 +477,7 @@ export default {
 };
 ```
 
-#### CartLikeContentDetail
-
-##### CartLikeContentDetail/LimeItemInfo
+### CartLikeContentDetail/LimeItemInfo
 
 Here was shown a discount for single product
 
@@ -528,7 +542,7 @@ de:
   discounted: "Ermäßigt"
 ```
 
-#### Other changes
+### Other changes
 
 Functions that extends **useCartMutation.js** allowed to mark changes in codes used in cart and revalidate codes.
 
