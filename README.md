@@ -1,6 +1,6 @@
 # sunrise-for-commerce-tools-integration
 
-[![Licence]](https://img.shields.io/hexpm/l/plug)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Licence](https://img.shields.io/hexpm/l/plug)](https://www.apache.org/licenses/LICENSE-2.0)
 
 This repository is a fork from Sunrise SPA which extends it by features that allows you use codes provided by Voucherify application via Commerce Tools integration.
 
