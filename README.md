@@ -1,28 +1,27 @@
+# sunrise-for-commerce-tools-integration
+
+This repository is a fork from Sunrise SPA which extends it by features that allows you use codes provided by Voucherify application via Commerce Tools integration.
+
 ## Table of Contents
 
-1. [sunrise-for-commerce-tools-integration](#sunrise-for-commerce-tools-integration)
-2. [Related applications](#related-applications)
-3. [Prerequisites](#prerequisites)
-4. [Dependencies](#Dependencies)
-5. [Installation](#Installation)
-6. [Contact](#contact)
-7. [Licence](#licence)
-8. [High level integration requirements](#high-level-integration-requirements)
+1. [Related applications](#related-applications)
+2. [Prerequisites](#prerequisites)
+3. [Dependencies](#Dependencies)
+4. [Installation](#Installation)
+5. [High level integration requirements](#high-level-integration-requirements)
    1. [Cover the following use cases](#cover-the-following-use-cases)
    2. [Graphql request changes](#graphql-request-changes)
    3. [Request example](#request-example)
    4. [Result example](#result-example)
-9. [Changes in our sunrise fork](#changes-in-our-sunrise-fork)
+6. [Changes in our sunrise fork](#changes-in-our-sunrise-fork)
    1. [CartLikePriceDetail](#cartlikepricedetail)
    2. [CartLikePriceDetail/DiscountCodes](#cartlikepricedetaildiscountcodes)
    3. [CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm](#cartlikepricedetaildiscountcodesremovediscountcodeform)
    4. [AddDiscountCodeForm](#adddiscountcodeform)
    5. [CartLikeContentDetail/LimeItemInfo](#cartlikecontentdetaillimeiteminfo)
    6. [Other changes](#other-changes)
-
-# sunrise-for-commerce-tools-integration
-
-This repository is a fork from Sunrise SPA which extends it by features that allows you use codes provided by Voucherify application via Commerce Tools integration.
+7. [Contact](#contact)
+8. [Licence](#licence)
 
 ## Related applications
 
@@ -65,14 +64,6 @@ VUE_APP_CT_SCOPE=
 VUE_APP_CT_AUTH_HOST=
 VUE_APP_CT_API_HOST=
 ```
-
-## Contact
-
-Use our contact form https://www.voucherify.io/contact-sales
-
-## Licence
-
-This project uses the following license: 
 
 ## High level integration requirements
 
@@ -612,5 +603,17 @@ export const CODES_TYPES = {
   UNIT: 'UNIT',
 }
 export const CUSTOM_LINE_ITEM_VOUCHER_NAME = 'Voucher, '
+```
+
+## Contact
+
+Use our contact form https://www.voucherify.io/contact-sales
+
+## Licence
+
+``` 
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
 ```
 
