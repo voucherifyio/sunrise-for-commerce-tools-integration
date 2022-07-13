@@ -1,6 +1,7 @@
 import { useCartActions } from 'hooks/useCartMutation';
 import config from '../sunrise.config';
 import useCart from './useCart';
+import { AVAILABLE_CODES_NAMES } from '../src/constants'
 
 function subTotal(cartLike) {
   const { currencyCode, fractionDigits } =
@@ -100,7 +101,7 @@ const discountCodesExist = (cart) => {
 const discountVoucherifyCodesExist = (cart) => {
   let codeExist = false;
   cart.custom.customFieldsRaw.forEach(element => {
-    if(element.name === 'discount_codes' && element.value.length != 0) codeExist = true;
+    if(element.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES && element.value.length != 0) codeExist = true;
   });
   return codeExist
 };
@@ -108,7 +109,7 @@ const discountVoucherifyCodesExist = (cart) => {
 const returnVoucherifyCodes = (cart) => {
   let voucherifyCodes = [];
   cart.custom.customFieldsRaw.forEach(element => {
-    if(element.name === 'discount_codes' && element.value.length != 0) voucherifyCodes = element.value;
+    if(element.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES && element.value.length != 0) voucherifyCodes = element.value;
   });
   return voucherifyCodes;
 }

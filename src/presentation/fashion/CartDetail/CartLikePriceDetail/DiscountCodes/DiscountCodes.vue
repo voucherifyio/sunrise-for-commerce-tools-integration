@@ -3,8 +3,6 @@
 <script src="./DiscountCodes.js"></script>
 
 <template>
-
- 
   <div class="single-grand-total" v-if="appliedCodes">
     <div class="single-grand-total-left col-sm-6">
       <span>{{ t('appliedDiscounts') }}</span>
@@ -27,5 +25,4 @@
         </div>
     </div>
   </div>
-
 </template>

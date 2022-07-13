@@ -4,6 +4,10 @@ import LineItemQuantityForm from 'presentation/components/LineItemQuantityForm/L
 
 import Remove from 'presentation/components/LineItemQuantityForm/Remove/Remove.vue';
 import useCartTools from 'hooks/useCartTools';
+
+import { AVAILABLE_CODES_NAMES, CODES_TYPES } from '../../../../../constants'
+import { useI18n } from 'vue-i18n';
+
 export default {
   components: {
     LineItemQuantityForm,
@@ -46,7 +50,11 @@ export default {
         emit('unselect-return-item', item.value);
       }
     });
+
+    const { t } = useI18n();
+
     return {
+      t,
       selected,
       item,
       ...useCartTools(),
@@ -56,13 +64,13 @@ export default {
   computed: {
     quantityFromCode(props){
       const codeWithFreeItem = props.lineItem.custom?.customFieldsRaw
-        .find(code => code.name === 'applied_codes')
-        
+        .find(code => code.name === AVAILABLE_CODES_NAMES.APPLIED_CODES)
+
       if(codeWithFreeItem) {
         return codeWithFreeItem
           .value
           .map(code => JSON.parse(code))
-          .find(code => code.type === 'UNIT')
+          .find(code => code.type === CODES_TYPES.UNIT)
           .totalDiscountQuantity
       }
 
