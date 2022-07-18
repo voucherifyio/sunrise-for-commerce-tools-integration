@@ -109,7 +109,7 @@ const codes = [
 ]
 ```
 
-Then you need pass it to your graphql query through customField named "discount_codes" more here https://docs.commercetools.com/api/projects/custom-fields#customfields
+Then you need to pass it to your Graphql query through a custom field named "discount_codes", more here: https://docs.commercetools.com/api/projects/custom-fields#customfields
 
 ```js
 {
