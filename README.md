@@ -271,7 +271,7 @@ In **CartLikePriceDetail.vue** DiscountCodes component was made dependen on disc
 </div>
 ```
 
-**CartLikePriceDetail.js** was extended by logic that allow to filter and get data about current applied voucher 
+**CartLikePriceDetail.js** was extended by logic that allows to filter and get data about the current applied voucher
 
 ```js
 import {CUSTOM_LINE_ITEM_VOUCHER_NAME} from '../../../../constants'
