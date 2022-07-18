@@ -83,7 +83,7 @@ To flawless work of your frontend application you need to cover a few use case
 - handle removing products of changing of their quantity (applied codes needs to be revalidated, some codes may be not able to apply after changes)
 - handle coupons that add new products to your cart
 
-In our example each action which is related to codes (adding, removing) and changning products in cart (adding, removing, changing quantity) mutate state of cart. Next by graphql query to Commerce Tools API we get data with codes validation results which can be shown in cart view.
+In our example, each action related to codes (adding, removing) and changing products in the cart (adding, removing, changing quantity) mutate the state of the cart. Next, by Graphql query to Commerce Tools API, we get data with codes validation results shown in cart view.
 
 ### Graphql request changes
 
