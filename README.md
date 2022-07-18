@@ -39,7 +39,7 @@ This repository is a fork from [Sunrise SPA](https://github.com/commercetools/su
 
 ## Prerequisites
 
-Before you begin, ensure you have following requirements
+Before you begin, ensure you have the following requirements
 
 - Voucherify account and valid API keys
 - Commerce Tools account with created API Client and valid API keys
