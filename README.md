@@ -364,21 +364,30 @@ In **DiscountCodes/style.css** style was added
 **RemoveDiscountCodeForm.js** extended logic allowed to remove codes with on click method binded in **RemoveDiscountCodeForm.vue**
 
 ```js 
-setup(props) {
-  const {
-  returnVoucherifyCodes,
-  applyVoucherifyDiscount,
-  } = useCartTools();
+  setup(props) {
+    const {
+      returnVoucherifyCodes,
+      applyVoucherifyDiscount,
+    } = useCartTools();
 
-  const removeDiscount = () => {
-  const codes = returnVoucherifyCodes(props.cart)
-      .map(code => JSON.parse(code))
-      .filter(code => code.code != props.code)
-      
-  applyVoucherifyDiscount(codes)
-  };
-  return { removeDiscount };
-},
+    const removeDiscount = () => {
+      const codes = returnVoucherifyCodes(props.cart)
+        .map(code => JSON.parse(code))
+        .map(code => {
+          if(code.code === props.code) {
+            return {
+              code: code.code,
+              value: code.value,
+              status: CODES_STATUSES.DELETED
+            }
+          }
+          return code
+        })
+        
+      applyVoucherifyDiscount(codes)
+    };
+    return { removeDiscount };
+  },
 ```
 
 ### AddDiscountCodeForm
@@ -604,7 +613,8 @@ export const AVAILABLE_CODES_NAMES = {
 }
 export const CODES_STATUSES = {
   APPLIED: 'APPLIED',
-  NEW: 'NEW'
+  NEW: 'NEW',
+  DELETED: 'DELETED'
 }
 export const CODES_TYPES = {
   UNIT: 'UNIT',

@@ -1,4 +1,5 @@
 import useCartTools from 'hooks/useCartTools';
+import { CODES_STATUSES } from '../../../../../../constants';
 
 //removeDiscountCode
 export default {
@@ -21,7 +22,16 @@ export default {
     const removeDiscount = () => {
       const codes = returnVoucherifyCodes(props.cart)
         .map(code => JSON.parse(code))
-        .filter(code => code.code != props.code)
+        .map(code => {
+          if(code.code === props.code) {
+            return {
+              code: code.code,
+              value: code.value,
+              status: CODES_STATUSES.DELETED
+            }
+          }
+          return code
+        })
         
       applyVoucherifyDiscount(codes)
     };
