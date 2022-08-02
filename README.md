@@ -27,8 +27,9 @@ This repository is a fork from [Sunrise SPA](https://github.com/commercetools/su
    5. [CartLikeContentDetail/LimeItemInfo](#cartlikecontentdetaillimeiteminfo)
    6. [Other changes](#other-changes)
 7. [Contributing](#contributing)
-8. [Contact](#contact)
-9. [Licence](#licence)
+8. [Changelog](#changelog)
+9. [Contact](#contact)
+10. [Licence](#licence)
 
 ## Related applications
 
@@ -364,21 +365,30 @@ In **DiscountCodes/style.css** style was added
 **RemoveDiscountCodeForm.js** extended logic allowed to remove codes with on click method binded in **RemoveDiscountCodeForm.vue**
 
 ```js 
-setup(props) {
-  const {
-  returnVoucherifyCodes,
-  applyVoucherifyDiscount,
-  } = useCartTools();
+  setup(props) {
+    const {
+      returnVoucherifyCodes,
+      applyVoucherifyDiscount,
+    } = useCartTools();
 
-  const removeDiscount = () => {
-  const codes = returnVoucherifyCodes(props.cart)
-      .map(code => JSON.parse(code))
-      .filter(code => code.code != props.code)
-      
-  applyVoucherifyDiscount(codes)
-  };
-  return { removeDiscount };
-},
+    const removeDiscount = () => {
+      const codes = returnVoucherifyCodes(props.cart)
+        .map(code => JSON.parse(code))
+        .map(code => {
+          if(code.code === props.code) {
+            return {
+              code: code.code,
+              value: code.value,
+              status: CODES_STATUSES.DELETED
+            }
+          }
+          return code
+        })
+        
+      applyVoucherifyDiscount(codes)
+    };
+    return { removeDiscount };
+  },
 ```
 
 ### AddDiscountCodeForm
@@ -604,7 +614,8 @@ export const AVAILABLE_CODES_NAMES = {
 }
 export const CODES_STATUSES = {
   APPLIED: 'APPLIED',
-  NEW: 'NEW'
+  NEW: 'NEW',
+  DELETED: 'DELETED'
 }
 export const CODES_TYPES = {
   UNIT: 'UNIT',
@@ -615,6 +626,12 @@ export const CUSTOM_LINE_ITEM_VOUCHER_NAME = 'Voucher, '
 ## Contributing
 
 Bug reports and pull requests are welcome through [GitHub Issues](https://github.com/voucherifyio/sunrise-for-commerce-tools-integration/issues).
+
+
+## Changelog
+
+- 2022-08-02 `v2.0.0` - Remove coupon code by changing the status to `DELETED`. It allows to remove coupon from session by [Commerce Tools Integration v2.0.0 or higher](https://github.com/voucherifyio/commerce-tools-integration)
+- 2022-07-26 `v1.0.0` - Initial release
 
 ## Contact
 
