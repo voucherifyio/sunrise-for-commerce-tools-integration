@@ -4,6 +4,7 @@ import useMutation from '../useMutationFacade';
 import useCart from '../useCart';
 import gql from 'graphql-tag';
 import { AVAILABLE_CODES_NAMES } from '../../src/constants'
+import useLocale from '../useLocale'
 
 const create = gql`
   mutation createCart($draft: MyCartDraft!) {
@@ -135,6 +136,7 @@ const useCartMutation = ({ location, currency }) => {
     useMutation(mutation);
   const [createCart] = useMutation(create);
   const { cart, exist } = useCart();
+  const { locale } = useLocale();
 
   const mutateCart = (actions) => {
     return Promise.resolve()
@@ -145,6 +147,7 @@ const useCartMutation = ({ location, currency }) => {
               draft: {
                 currency: getValue(currency),
                 country: getValue(location),
+                locale: locale.value,
                 shippingAddress: {
                   country: getValue(location),
                 },

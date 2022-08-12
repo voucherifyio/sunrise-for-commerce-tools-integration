@@ -581,6 +581,25 @@ export const removeVoucherifyCode = () => [
 ];
 ```
 
+Add locale field in **useCartMutation.js** 
+```js
+(...)
+const { locale } = useLocale();
+(...)
+return createCart({
+  variables: {
+    draft: {
+      currency: getValue(currency),
+      country: getValue(location),
+      locale: locale.value,
+      shippingAddress: {
+        country: getValue(location),
+      },
+    },
+  },
+(...)
+```
+
 Functions in **composition/useCartTools.js** for checking if V% discount codes exist and for returning it.
 
 ```js
