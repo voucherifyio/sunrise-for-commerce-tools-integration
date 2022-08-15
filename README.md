@@ -151,6 +151,7 @@ query myCart($locale: Locale!) {
             currencyCode
             fractionDigits
         }
+        slug
       }
     }
   }
@@ -275,13 +276,13 @@ In **CartLikePriceDetail.vue** DiscountCodes component was made dependen on disc
 **CartLikePriceDetail.js** was extended by logic that allows to filter and get data about the current applied voucher
 
 ```js
-import {CUSTOM_LINE_ITEM_VOUCHER_NAME} from '../../../../constants'
+import {CUSTOM_LINE_ITEM_VOUCHER_SLUG} from '../../../../constants'
 
 export default {
   (...)
   computed: {
     discountValue(props) {
-      const customLineItemWithDiscount = props.cart.customLineItems.find(item => item.name.startsWith(CUSTOM_LINE_ITEM_VOUCHER_NAME))
+      const customLineItemWithDiscount = props.cart.customLineItems.find(item => item.slug.startsWith(CUSTOM_LINE_ITEM_VOUCHER_SLUG))
       if(customLineItemWithDiscount) {
         return customLineItemWithDiscount.totalPrice
       }
@@ -620,7 +621,7 @@ export const CODES_STATUSES = {
 export const CODES_TYPES = {
   UNIT: 'UNIT',
 }
-export const CUSTOM_LINE_ITEM_VOUCHER_NAME = 'Voucher, '
+export const CUSTOM_LINE_ITEM_VOUCHER_SLUG = 'Voucher, '
 ```
 
 ## Contributing

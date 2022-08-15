@@ -20,5 +20,5 @@ export const CODES_STATUSES = {
 export const CODES_TYPES = {
   UNIT: 'UNIT',
 }
-export const CUSTOM_LINE_ITEM_VOUCHER_NAME = 'Voucher, '
+export const CUSTOM_LINE_ITEM_VOUCHER_SLUG = 'Voucher, '
 
