@@ -100,7 +100,7 @@ const discountCodesExist = (cart) => {
 };
 const discountVoucherifyCodesExist = (cart) => {
   let codeExist = false;
-  cart.custom.customFieldsRaw.forEach(element => {
+  cart.custom?.customFieldsRaw?.forEach(element => {
     if(element.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES && element.value.length != 0) codeExist = true;
   });
   return codeExist
@@ -108,7 +108,7 @@ const discountVoucherifyCodesExist = (cart) => {
 
 const returnVoucherifyCodes = (cart) => {
   let voucherifyCodes = [];
-  cart.custom.customFieldsRaw.forEach(element => {
+  cart.custom?.customFieldsRaw?.forEach(element => {
     if(element.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES && element.value.length != 0) voucherifyCodes = element.value;
   });
   return voucherifyCodes;
