@@ -639,6 +639,7 @@ Bug reports and pull requests are welcome through [GitHub Issues](https://github
 
 ## Changelog
 
+- 2022-08-19 `v3.0.0` - changed how `Custom Line Item` with discount is tracked and some small fixes
 - 2022-08-02 `v2.0.0` - Remove coupon code by changing the status to `DELETED`. It allows to remove coupon from session by [Commerce Tools Integration v2.0.0 or higher](https://github.com/voucherifyio/commerce-tools-integration)
 - 2022-07-26 `v1.0.0` - Initial release
 
