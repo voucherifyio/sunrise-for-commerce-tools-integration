@@ -130,6 +130,7 @@ const query = gql`
             currencyCode
             fractionDigits
           }
+          slug
         }
       }
     }
