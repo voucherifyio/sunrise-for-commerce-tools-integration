@@ -447,14 +447,22 @@ export default {
     }, form)
 
     const applyDiscount = () => {
-      const codes = returnVoucherifyCodes(props.cart)
-        .map(code => JSON.parse(code))
-        .filter(code => Object.values(CODES_STATUSES).includes(code.status));
+      enteredCode.value = form.value.code;
 
-      enteredCode.value = form.value.code
+      const codes = returnVoucherifyCodes(props.cart)
+          .map(code => JSON.parse(code))
+          .filter(code => Object.values(CODES_STATUSES).includes(code.status));
+
       form.value.code = ''
-      return applyVoucherifyDiscount([...codes, { code: enteredCode.value, status: CODES_STATUSES.NEW }])
+
+      if(enteredCode.value){
+        return applyVoucherifyDiscount([...codes, { code: enteredCode.value, status: CODES_STATUSES.NEW }])
+      }else{
+        return applyVoucherifyDiscount([...codes])
+      }
     };
+    
+    applyDiscount();
 
     const getErrorMessage = ({ code }) => {
       if (code === 'DiscountCodeNonApplicable') {
