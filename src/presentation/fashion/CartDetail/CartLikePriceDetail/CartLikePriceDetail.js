@@ -1,12 +1,14 @@
 import { useI18n } from 'vue-i18n';
 import BasePrice from 'presentation/components/BasePrice/BasePrice.vue';
 import DiscountCodes from './DiscountCodes/DiscountCodes.vue';
+import Promotions from './Promotions/Promotions.vue';
 import useCartTools from 'hooks/useCartTools';
 import {CUSTOM_LINE_ITEM_VOUCHER_SLUG} from '../../../../constants'
 
 export default {
   components: {
     DiscountCodes,
+    Promotions,
     BasePrice,
   },
   props: {
