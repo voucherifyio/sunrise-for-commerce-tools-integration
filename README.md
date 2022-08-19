@@ -151,6 +151,7 @@ query myCart($locale: Locale!) {
             currencyCode
             fractionDigits
         }
+        slug
       }
     }
   }
@@ -275,13 +276,13 @@ In **CartLikePriceDetail.vue** DiscountCodes component was made dependen on disc
 **CartLikePriceDetail.js** was extended by logic that allows to filter and get data about the current applied voucher
 
 ```js
-import {CUSTOM_LINE_ITEM_VOUCHER_NAME} from '../../../../constants'
+import {CUSTOM_LINE_ITEM_VOUCHER_SLUG} from '../../../../constants'
 
 export default {
   (...)
   computed: {
     discountValue(props) {
-      const customLineItemWithDiscount = props.cart.customLineItems.find(item => item.name.startsWith(CUSTOM_LINE_ITEM_VOUCHER_NAME))
+      const customLineItemWithDiscount = props.cart.customLineItems.find(item => item.slug.startsWith(CUSTOM_LINE_ITEM_VOUCHER_SLUG))
       if(customLineItemWithDiscount) {
         return customLineItemWithDiscount.totalPrice
       }
@@ -446,14 +447,22 @@ export default {
     }, form)
 
     const applyDiscount = () => {
-      const codes = returnVoucherifyCodes(props.cart)
-        .map(code => JSON.parse(code))
-        .filter(code => Object.values(CODES_STATUSES).includes(code.status));
+      enteredCode.value = form.value.code;
 
-      enteredCode.value = form.value.code
+      const codes = returnVoucherifyCodes(props.cart)
+          .map(code => JSON.parse(code))
+          .filter(code => Object.values(CODES_STATUSES).includes(code.status));
+
       form.value.code = ''
-      return applyVoucherifyDiscount([...codes, { code: enteredCode.value, status: CODES_STATUSES.NEW }])
+
+      if(enteredCode.value){
+        return applyVoucherifyDiscount([...codes, { code: enteredCode.value, status: CODES_STATUSES.NEW }])
+      }else{
+        return applyVoucherifyDiscount([...codes])
+      }
     };
+    
+    applyDiscount();
 
     const getErrorMessage = ({ code }) => {
       if (code === 'DiscountCodeNonApplicable') {
@@ -620,7 +629,7 @@ export const CODES_STATUSES = {
 export const CODES_TYPES = {
   UNIT: 'UNIT',
 }
-export const CUSTOM_LINE_ITEM_VOUCHER_NAME = 'Voucher, '
+export const CUSTOM_LINE_ITEM_VOUCHER_SLUG = 'Voucher, '
 ```
 
 ## Contributing
@@ -630,6 +639,7 @@ Bug reports and pull requests are welcome through [GitHub Issues](https://github
 
 ## Changelog
 
+- 2022-08-19 `v3.0.0` - changed how `Custom Line Item` with discount is tracked and some small fixes
 - 2022-08-02 `v2.0.0` - Remove coupon code by changing the status to `DELETED`. It allows to remove coupon from session by [Commerce Tools Integration v2.0.0 or higher](https://github.com/voucherifyio/commerce-tools-integration)
 - 2022-07-26 `v1.0.0` - Initial release
 

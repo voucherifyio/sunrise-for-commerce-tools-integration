@@ -2,7 +2,7 @@ import { useI18n } from 'vue-i18n';
 import BasePrice from 'presentation/components/BasePrice/BasePrice.vue';
 import DiscountCodes from './DiscountCodes/DiscountCodes.vue';
 import useCartTools from 'hooks/useCartTools';
-import {CUSTOM_LINE_ITEM_VOUCHER_NAME} from '../../../../constants'
+import {CUSTOM_LINE_ITEM_VOUCHER_SLUG} from '../../../../constants'
 
 export default {
   components: {
@@ -26,7 +26,7 @@ export default {
 
   computed: {
     discountValue(props) {
-      const customLineItemWithDiscount = props.cart.customLineItems.find(item => item.name.startsWith(CUSTOM_LINE_ITEM_VOUCHER_NAME))
+      const customLineItemWithDiscount = props.cart.customLineItems.find(item => item.slug.startsWith(CUSTOM_LINE_ITEM_VOUCHER_SLUG))
       if(customLineItemWithDiscount) {
         return customLineItemWithDiscount.totalPrice
       }
