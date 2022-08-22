@@ -1,17 +1,16 @@
 import useLocale from './useLocale';
-import useLocation from './useLocation';
-import useCurrency from './useCurrency';
 import useShippingMethods from './ct/useShippingMethods';
+import useCart from "hooks/useCart";
+import {getValue} from "@/lib";
 
 export default () => {
   const { locale } = useLocale();
-  const { location } = useLocation();
-  const currency = useCurrency();
+  const { cart } = useCart();
+  const cartId = getValue(cart).cartId;
   const { total, shippingMethods, loading, error } =
     useShippingMethods({
-      locale,
-      currency,
-      country: location,
+      cartId,
+      locale
     });
   return {
     total,
