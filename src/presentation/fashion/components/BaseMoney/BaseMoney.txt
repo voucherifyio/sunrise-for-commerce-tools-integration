@@ -1,0 +1,4 @@
+en:
+  free_shipping: "FREE SHIPPING"
+de:
+  free_shipping: "KOSTENLOSER VERSAND"
