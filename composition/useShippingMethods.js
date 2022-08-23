@@ -1,7 +1,7 @@
 import useLocale from './useLocale';
 import useShippingMethods from './ct/useShippingMethods';
-import useCart from "hooks/useCart";
 import {getValue} from "@/lib";
+import useCart from "hooks/useCart";
 
 export default () => {
   const { locale } = useLocale();
