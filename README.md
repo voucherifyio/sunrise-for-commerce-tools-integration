@@ -603,6 +603,8 @@ This component is placed in the `CartLikePriceDetail.vue` component. Additionall
 
 ### Other changes
 
+#### UseCartMutation
+
 Functions that extends **useCartMutation.js** allowed to mark changes in codes used in cart and revalidate codes.
 
 ```js
@@ -654,6 +656,71 @@ const returnVoucherifyCodes = (cart) => {
 }
 (...)
 ```
+
+#### UseShippingMethods
+
+Changes in **./composition/ct/useShippingMethods.js** for proper getting shipping's methods relied on current cart state. 
+
+```js
+(...)
+const query = gql`
+  query shippingMethods(
+    $cartId: String!
+    $locale: Locale!
+  ) {
+    shippingMethodsByCart(
+      id: $cartId
+    ) {
+      (...)
+    }
+  }
+`;
+
+const useShippingMethods = ({
+   (...)
+   const { loading, error } = useQueryFacade(query, {
+      (...)
+      onCompleted: (data) => {
+         if (!data) {
+            return;
+         }
+         setShippingMethods(data.shippingMethodsByCart);
+      },
+   });
+   return { shippingMethods, loading, error };
+};
+export default useShippingMethods;
+```
+
+In **./composition/useShippingMethods.js** there are changes for proper passing parameters to method.
+
+```js
+import useLocale from './useLocale';
+import useShippingMethods from './ct/useShippingMethods';
+import {getValue} from "@/lib";
+import useCart from "hooks/useCart";
+
+export default () => {
+  const { locale } = useLocale();
+  const { cart } = useCart();
+  const cartId = getValue(cart).cartId;
+  const { total, shippingMethods, loading, error } =
+    useShippingMethods({
+      cartId,
+      locale
+    });
+  return {
+    total,
+    shippingMethods,
+    loading,
+    error,
+  };
+};
+
+```
+
+
+#### Constants
 
 Added new consts in **constants.js**
 
