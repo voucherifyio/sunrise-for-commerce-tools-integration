@@ -345,18 +345,13 @@ export default {
 </template>
 ```
 
-**BaseMoney.vue** vas extended by import 
-```vue
-<i18n src="./BaseMoney.txt" lang="yaml"></i18n>
-```
-
 **BaseMoney.js** was changed to form that allow to show string type elements on discount list.
 
 ```js
 (...)
 
 export default {
-   const { n, t } = useI18n();
+   const { n } = useI18n();
    (...)
    setup(props) {
     (...)
@@ -364,21 +359,12 @@ export default {
       if (typeof props.money.centAmount == "number"){
         return n(-amount.value, 'currency', location.value);
       } else {
-        return t(props.money.centAmount ?? '');
+        return props.money.centAmount ?? '';
       }
     });
     (...)
   },
 };
-```
-
-**BaseMoney.txt** with translated fields was added to './src/presentation/fashion/components/BaseMoney' directory
-
-```txt
-en:
-  free_shipping: "FREE SHIPPING"
-de:
-  free_shipping: "KOSTENLOSER VERSAND"
 ```
 
 In **DiscountCodes/style.css** style was added
