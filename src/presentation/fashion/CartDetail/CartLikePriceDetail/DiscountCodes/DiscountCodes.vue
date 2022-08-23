@@ -17,7 +17,7 @@
           <b >{{code.code}}</b>
           <b class="code-gap"></b>
           <b class="code-value">
-            <BasePrice :price="{value: {centAmount: -code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
+            <BasePrice :price="{value: {centAmount: code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
           </b>
           <RemoveDiscountCodeForm
             v-if="editable"
