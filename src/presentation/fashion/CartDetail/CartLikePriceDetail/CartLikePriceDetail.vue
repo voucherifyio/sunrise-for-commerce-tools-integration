@@ -37,6 +37,7 @@
         :cart="cart"
         :editable="editable"
       />
+      <div class="mb-20"></div>
       <DiscountCodes
         v-if="discountVoucherifyCodesExist(cart)"
         :cart="cart"
