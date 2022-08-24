@@ -13,10 +13,10 @@ export default {
     const { n } = useI18n();
     const { location } = useLocation();
     const formattedMoney = computed(() => {
-      if (typeof props.money.centAmount == "number"){
+      if (typeof props?.money?.centAmount == "number"){
         return n(-amount.value, 'currency', location.value);
       } else {
-        return props.money.centAmount ?? '';
+        return props?.money?.centAmount ?? '';
       }
     });
     const amount = computed(() => {
