@@ -3,12 +3,14 @@
 <script src="./DiscountCodes.js"></script>
 
 <template>
-  <div class="single-grand-total" v-if="appliedCodes">
+  <div class="single-grand-total mb-0" v-if="appliedCodes">
     <div class="single-grand-total-left col-sm-6">
       <span>{{ t('appliedDiscounts') }}</span>
     </div>
+  </div>
+  <div class="single-grand-total">
     <div
-      class="single-grand-total-right col-sm-6"
+      class="single-grand-total-right col-sm-12"
       data-test="discount-code-name"
     >
         <div class="code-container" v-for="code in appliedCodes" :key="code">

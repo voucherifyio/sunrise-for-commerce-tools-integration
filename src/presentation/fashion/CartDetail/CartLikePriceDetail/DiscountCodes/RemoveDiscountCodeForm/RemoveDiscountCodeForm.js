@@ -27,7 +27,8 @@ export default {
             return {
               code: code.code,
               value: code.value,
-              status: CODES_STATUSES.DELETED
+              status: CODES_STATUSES.DELETED,
+              type: code.type
             }
           }
           return code
