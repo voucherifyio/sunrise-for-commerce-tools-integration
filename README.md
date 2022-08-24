@@ -332,7 +332,7 @@ export default {
           <b >{{code.code}}</b>
           <b class="code-gap"></b>
           <b class="code-value">
-            <BasePrice :price="{value: {centAmount: code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
+            <BasePrice :price="{value: {centAmount: typeof code.value == 'number' ? -code.value : code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
           </b>
           <RemoveDiscountCodeForm
             v-if="editable"
@@ -357,7 +357,7 @@ export default {
     (...)
     const formattedMoney = computed(() => {
       if (typeof props?.money?.centAmount == "number"){
-        return n(-amount.value, 'currency', location.value);
+        return n(amount.value, 'currency', location.value);
       } else {
         return props?.money?.centAmount ?? '';
       }
