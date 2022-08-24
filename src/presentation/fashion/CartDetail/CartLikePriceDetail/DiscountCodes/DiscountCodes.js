@@ -22,7 +22,7 @@ export default {
         .reduce(customField => customField)
         .value
         .map(code => JSON.parse(code))
-        .filter(code => code.status === CODES_STATUSES.APPLIED )
+        .filter(code => code.status === CODES_STATUSES.APPLIED)
       
       return appliedCodes.length ? appliedCodes : false
     }
