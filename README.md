@@ -559,6 +559,12 @@ de:
   discounted: "Ermäßigt"
 ```
 
+### Promotions
+
+To handle [Promotion Tiers](https://docs.voucherify.io/docs/promotion-tier) we add `Promotion` component (`src/presentation/fashion/CartDetail/CartLikePriceDetail/Promotions`). It works the way that we look for discounts in created promotion tiers in the Voucherify project, which are available for specific carts (it is done by the backend) and then we list them on the frontend, where users can add and remove them from the cart, which works similar to the way how we add typical coupons.
+
+This component is placed in the `CartLikePriceDetail.vue` component. Additionally, to make it work properly we add the `AVAILABLE` code status to `CODES_STATUSES` const and in `src/presentation/fashion/CartDetail/CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm/RemoveDiscountCodeForm.js` we add a new returned field which is called `type` (coupons and promotions tiers are handled a little bit different in Voucherify so we have to differentiate them to use the same component for removing discounts). Moreover, there are some typical CSS/HTML changes to look it better. 
+
 ### Other changes
 
 Functions that extends **useCartMutation.js** allowed to mark changes in codes used in cart and revalidate codes.
@@ -638,7 +644,7 @@ Bug reports and pull requests are welcome through [GitHub Issues](https://github
 
 
 ## Changelog
-
+- 2022-08-25 `v3.0.1` - added promotion tier handling
 - 2022-08-19 `v3.0.0` - changed how `Custom Line Item` with discount is tracked and some small fixes
 - 2022-08-02 `v2.0.0` - Remove coupon code by changing the status to `DELETED`. It allows to remove coupon from session by [Commerce Tools Integration v2.0.0 or higher](https://github.com/voucherifyio/commerce-tools-integration)
 - 2022-07-26 `v1.0.0` - Initial release

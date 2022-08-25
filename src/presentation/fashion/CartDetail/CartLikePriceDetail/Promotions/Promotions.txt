@@ -1,0 +1,6 @@
+en:
+    availablePromo: "Available promotions"
+    add: "Add"
+de:
+    availablePromo: "Verfügbare Aktionen"
+    add: "hinzufügen"

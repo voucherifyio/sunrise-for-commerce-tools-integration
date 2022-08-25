@@ -32,11 +32,19 @@
           </span>
         </div>
       </div>
+      
+      <Promotions 
+        :cart="cart"
+        :editable="editable"
+      />
+      <div class="mb-20"></div>
       <DiscountCodes
         v-if="discountVoucherifyCodesExist(cart)"
         :cart="cart"
         :editable="editable"
       />
+
+
     </div>
     <div class="cart-total-wrap">
       <div class="row" v-if="discountValue.centAmount != 0">
