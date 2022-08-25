@@ -61,6 +61,45 @@ export default {
     };
   },
 
+  methods: {
+    getCouponFixedPrice(custom){
+      if(custom?.customFieldsRaw?.length > 0){
+        return custom?.customFieldsRaw.filter((element) => {
+          return element.name === 'coupon_fixed_price';
+        }).map((element) => element.value)[0];
+      } else {
+        return null
+      }
+    },
+
+    getPrice(lineItem){
+      const price = {
+        ...lineItem.price
+      }
+
+      if(lineItem.custom?.customFieldsRaw?.length > 0){
+        price.discounted = {
+          value: {
+            currencyCode: lineItem.price.value.currencyCode,
+            fractionDigits: lineItem.price.value.fractionDigits,
+          }
+        }
+        price.discounted.value.centAmount = this.getCouponFixedPrice(lineItem.custom)
+      }
+
+      return price;
+    },
+
+    getTotalPrice(lineItem){
+      const lineObject = {
+        ...lineItem,
+        price: this.getPrice(lineItem)
+      }
+
+      return lineObject;
+    }
+  },
+
   computed: {
     quantityFromCode(props){
       const codeWithFreeItem = props.lineItem.custom?.customFieldsRaw
