@@ -1,12 +1,12 @@
 import BasePrice from 'presentation/components/BasePrice/BasePrice.vue';
-import { computed, shallowRef, watch } from 'vue';
+import {computed, shallowRef, watch} from 'vue';
 import LineItemQuantityForm from 'presentation/components/LineItemQuantityForm/LineItemQuantityForm.vue';
 
 import Remove from 'presentation/components/LineItemQuantityForm/Remove/Remove.vue';
 import useCartTools from 'hooks/useCartTools';
 
-import { AVAILABLE_CODES_NAMES, CODES_TYPES } from '../../../../../constants'
-import { useI18n } from 'vue-i18n';
+import {AVAILABLE_CODES_NAMES, CODES_TYPES} from '../../../../../constants'
+import {useI18n} from 'vue-i18n';
 
 export default {
   components: {
@@ -76,27 +76,25 @@ export default {
       const price = {
         ...lineItem.price
       }
-
-      if(lineItem.custom?.customFieldsRaw?.length > 0){
+      const couponFixedPrice = this.getCouponFixedPrice(lineItem.custom);
+      if(couponFixedPrice){
         price.discounted = {
           value: {
             currencyCode: lineItem.price.value.currencyCode,
             fractionDigits: lineItem.price.value.fractionDigits,
           }
         }
-        price.discounted.value.centAmount = this.getCouponFixedPrice(lineItem.custom)
+        price.discounted.value.centAmount = couponFixedPrice;
       }
 
       return price;
     },
 
     getTotalPrice(lineItem){
-      const lineObject = {
+      return {
         ...lineItem,
         price: this.getPrice(lineItem)
-      }
-
-      return lineObject;
+      };
     }
   },
 
