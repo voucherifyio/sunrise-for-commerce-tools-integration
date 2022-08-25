@@ -13,13 +13,17 @@ export default {
     const { n } = useI18n();
     const { location } = useLocation();
     const formattedMoney = computed(() => {
-      return n(amount.value, 'currency', location.value);
+      if (typeof props?.money?.centAmount == "number"){
+        return n(amount.value, 'currency', location.value);
+      } else {
+        return props?.money?.centAmount ?? '';
+      }
     });
     const amount = computed(() => {
       if (props?.money) {
         return (
-          props.money.centAmount /
-          10 ** props.money.fractionDigits
+            props.money.centAmount /
+            10 ** props.money.fractionDigits
         );
       }
       return 0;
@@ -30,6 +34,6 @@ export default {
       }
       return '';
     });
-    return { currency, amount, formattedMoney };
+    return { currency, amount, formattedMoney};
   },
 };

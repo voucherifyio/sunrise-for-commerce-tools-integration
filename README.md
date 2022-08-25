@@ -332,7 +332,7 @@ export default {
           <b >{{code.code}}</b>
           <b class="code-gap"></b>
           <b class="code-value">
-            <BasePrice :price="{value: {centAmount: -code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
+            <BasePrice :price="{value: {centAmount: typeof code.value == 'number' ? -code.value : code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
           </b>
           <RemoveDiscountCodeForm
             v-if="editable"
@@ -343,6 +343,28 @@ export default {
     </div>
   </div>
 </template>
+```
+
+**BaseMoney.js** was changed to form that allow to show string type elements on discount list.
+
+```js
+(...)
+
+export default {
+   const { n } = useI18n();
+   (...)
+   setup(props) {
+    (...)
+    const formattedMoney = computed(() => {
+      if (typeof props?.money?.centAmount == "number"){
+        return n(amount.value, 'currency', location.value);
+      } else {
+        return props?.money?.centAmount ?? '';
+      }
+    });
+    (...)
+  },
+};
 ```
 
 In **DiscountCodes/style.css** style was added
@@ -567,6 +589,8 @@ This component is placed in the `CartLikePriceDetail.vue` component. Additionall
 
 ### Other changes
 
+#### UseCartMutation
+
 Functions that extends **useCartMutation.js** allowed to mark changes in codes used in cart and revalidate codes.
 
 ```js
@@ -618,6 +642,71 @@ const returnVoucherifyCodes = (cart) => {
 }
 (...)
 ```
+
+#### UseShippingMethods
+
+Changes in **./composition/ct/useShippingMethods.js** for proper getting shipping's methods relied on current cart state. 
+
+```js
+(...)
+const query = gql`
+  query shippingMethods(
+    $cartId: String!
+    $locale: Locale!
+  ) {
+    shippingMethodsByCart(
+      id: $cartId
+    ) {
+      (...)
+    }
+  }
+`;
+
+const useShippingMethods = ({
+   (...)
+   const { loading, error } = useQueryFacade(query, {
+      (...)
+      onCompleted: (data) => {
+         if (!data) {
+            return;
+         }
+         setShippingMethods(data.shippingMethodsByCart);
+      },
+   });
+   return { shippingMethods, loading, error };
+};
+export default useShippingMethods;
+```
+
+In **./composition/useShippingMethods.js** there are changes for proper passing parameters to method.
+
+```js
+import useLocale from './useLocale';
+import useShippingMethods from './ct/useShippingMethods';
+import {getValue} from "@/lib";
+import useCart from "hooks/useCart";
+
+export default () => {
+  const { locale } = useLocale();
+  const { cart } = useCart();
+  const cartId = getValue(cart).cartId;
+  const { total, shippingMethods, loading, error } =
+    useShippingMethods({
+      cartId,
+      locale
+    });
+  return {
+    total,
+    shippingMethods,
+    loading,
+    error,
+  };
+};
+
+```
+
+
+#### Constants
 
 Added new consts in **constants.js**
 
