@@ -2,5 +2,10 @@
     color: rgb(0,222,0);
     text-transform: uppercase;
     font-weight: bold;
-    margin-left: 10px
+}
+.code-container {
+    display: flex;
+}
+.code-gap {
+    flex-grow: 1;
 }
