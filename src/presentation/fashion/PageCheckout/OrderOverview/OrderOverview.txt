@@ -9,6 +9,7 @@
     subtotal: "Subtotal"
     shipping: "Shipping"
     placeOrder: "Place Order"
+    discount: "Discount"
   de:
     itemsTotal: "{n} Artikel im Warenkorb"
     editMyCart: "Warenkorb bearbeiten"
@@ -20,3 +21,4 @@
     subtotal: "Zwischensumme"
     shipping: "Vesrsand"
     placeOrder: "Bestellen"
+    discount: "Rabatt"

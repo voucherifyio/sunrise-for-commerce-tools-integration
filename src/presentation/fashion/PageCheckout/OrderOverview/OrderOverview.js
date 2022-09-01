@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n';
 import ShippingMethod from './ShippingMethod/ShippingMethod.vue';
 import { ref } from 'vue';
 import useCartTools from 'hooks/useCartTools';
+import {CUSTOM_LINE_ITEM_VOUCHER_SLUG} from "@/constants";
 
 export default {
   props: {
@@ -50,4 +51,14 @@ export default {
       placeOrder,
     };
   },
+
+  computed: {
+    discountValue(props) {
+      const customLineItemWithDiscount = props.cart.customLineItems.find(item => item.slug.startsWith(CUSTOM_LINE_ITEM_VOUCHER_SLUG))
+      if(customLineItemWithDiscount) {
+        return customLineItemWithDiscount.totalPrice
+      }
+      return 0
+    }
+  }
 };

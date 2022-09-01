@@ -65,6 +65,16 @@
         v-on:card-paid="cardPaid"
         :key="cart.totalPrice.centAmount"
       />
+      <div class="your-order-info order-subtotal">
+        <ul>
+          <li>
+            <b class="bold-text">{{ t('discount') }}</b>
+            <span
+            ><BasePrice :price="{ value: discountValue }" />
+              </span>
+          </li>
+        </ul>
+      </div>
       <div class="your-order-info order-total">
         <ul>
           <li class="bold-text">
