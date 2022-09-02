@@ -626,6 +626,97 @@ To handle [Promotion Tiers](https://docs.voucherify.io/docs/promotion-tier) we a
 
 This component is placed in the `CartLikePriceDetail.vue` component. Additionally, to make it work properly we add the `AVAILABLE` code status to `CODES_STATUSES` const and in `src/presentation/fashion/CartDetail/CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm/RemoveDiscountCodeForm.js` we add a new returned field which is called `type` (coupons and promotions tiers are handled a little bit different in Voucherify so we have to differentiate them to use the same component for removing discounts). Moreover, there are some typical CSS/HTML changes to look it better. 
 
+### OrderOverview
+
+On the order overview there are a few changes that allows to display fixed prices and codes summary.
+
+In **OrderOverview.js** added computed fields `discountValue` and `appliedCodes` and functions `getSubTotal`, 
+`getPrice` were reported. 
+
+```js
+(...)
+import DiscountCode from "presentation/components/DiscountCode/DiscountCode.vue";
+import {getSubTotal, getPrice} from "hooks/useFixedPrice";
+
+export default {
+   components: {
+      ShippingMethod,
+      BasePrice,
+      PaymentMethod,
+      DiscountCode,
+      // VuePerfectScrollbar,
+   },
+   (...)
+   setup(props, { emit }) {
+      (...)
+      return {
+         (...)
+         getSubTotal,
+         getPrice
+      };
+   }
+
+   computed: {
+      discountValue(props) {
+         const customLineItemWithDiscount = props.cart.customLineItems.find(item => item.slug.startsWith(CUSTOM_LINE_ITEM_VOUCHER_SLUG))
+         if(customLineItemWithDiscount) {
+            return customLineItemWithDiscount.totalPrice
+         }
+         return 0
+      },
+   
+      appliedCodes() {
+         const appliedCodes = this.cart.custom?.customFieldsRaw
+                 .filter(field => field.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES)
+                 .reduce(customField => customField)
+                 .value
+                 .map(code => JSON.parse(code))
+                 .filter(code => code.status === CODES_STATUSES.APPLIED)
+   
+         return appliedCodes.length ? appliedCodes : false
+      }
+   }
+},
+```
+
+Template **OrderOverview.vue** was extended by showing discounts and fixed prices.
+
+```vue
+(...)
+<BasePrice :price="getPrice(lineItem)"></BasePrice>
+(...)
+<BasePrice :price="subTotal(getSubTotal(cart))"></BasePrice>
+(...)
+<div class="mt-10"></div>
+<div class="your-order-info">
+   <ul>
+      <li class="bold-text">
+         {{ t('code') }}
+         <span>{{ t('discount') }}</span>
+      </li>
+   </ul>
+</div>
+<div class="your-order-info order-subtotal">
+   <div v-for="code in appliedCodes" :key="code">
+      <discount-code :code="code" :cart="cart" :editable="false"></discount-code>
+   </div>
+</div>
+<div class="your-order-info order-subtotal">
+   <ul>
+      <li>
+         <b class="bold-text">{{ t('allDiscount') }}</b>
+         <span class="code-value">
+                 <b>
+                   <BasePrice :price="{ value: discountValue }" />
+                 </b>
+               </span>
+      </li>
+   </ul>
+</div>
+```
+
+There also was added styles and translates in **OrderOverview.scss** and **OrderOverview.txt**.
+
 ### Other changes
 
 #### UseCartMutation
@@ -664,6 +755,20 @@ function that allow to calculate total value including fixed price amount if app
 
 ```js
 import { AVAILABLE_CODES_NAMES } from '../src/constants'
+(...)
+function subTotal(cartLike) {
+   (...)
+   const totalPriceCentAmount = cartLike.lineItems.reduce(
+           (acc, li) => {
+              if(li.price.discounted) {
+                 return acc + li.quantity * li.price.discounted.value.centAmount
+              }else{
+                 return acc + li.quantity * li.price.value.centAmount
+              }
+           }, 0
+   );
+   (...)
+}
 (...)
 const total = (lineItem) => {
    if (lineItem.price.discounted) {

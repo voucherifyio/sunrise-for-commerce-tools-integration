@@ -6,9 +6,18 @@ import { useI18n } from 'vue-i18n';
 import ShippingMethod from './ShippingMethod/ShippingMethod.vue';
 import { ref } from 'vue';
 import useCartTools from 'hooks/useCartTools';
-import {CUSTOM_LINE_ITEM_VOUCHER_SLUG} from "@/constants";
+import {AVAILABLE_CODES_NAMES, CODES_STATUSES, CUSTOM_LINE_ITEM_VOUCHER_SLUG} from "@/constants";
+import DiscountCode from "presentation/components/DiscountCode/DiscountCode.vue";
+import {getSubTotal, getPrice} from "hooks/useFixedPrice";
 
 export default {
+  components: {
+    ShippingMethod,
+    BasePrice,
+    PaymentMethod,
+    DiscountCode,
+    // VuePerfectScrollbar,
+  },
   props: {
     showError: {
       type: Boolean,
@@ -18,12 +27,6 @@ export default {
       type: Object,
       required: true,
     },
-  },
-  components: {
-    ShippingMethod,
-    BasePrice,
-    PaymentMethod,
-    // VuePerfectScrollbar,
   },
   setup(props, { emit }) {
     const { t } = useI18n();
@@ -49,6 +52,8 @@ export default {
       paymentId,
       paid,
       placeOrder,
+      getSubTotal,
+      getPrice
     };
   },
 
@@ -59,6 +64,17 @@ export default {
         return customLineItemWithDiscount.totalPrice
       }
       return 0
+    },
+
+    appliedCodes() {
+      const appliedCodes = this.cart.custom?.customFieldsRaw
+          .filter(field => field.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES)
+          .reduce(customField => customField)
+          .value
+          .map(code => JSON.parse(code))
+          .filter(code => code.status === CODES_STATUSES.APPLIED)
+
+      return appliedCodes.length ? appliedCodes : false
     }
   }
 };

@@ -10,6 +10,8 @@
     shipping: "Shipping"
     placeOrder: "Place Order"
     discount: "Discount"
+    code: "Code"
+    allDiscount: "All discount"
   de:
     itemsTotal: "{n} Artikel im Warenkorb"
     editMyCart: "Warenkorb bearbeiten"
@@ -22,3 +24,5 @@
     shipping: "Vesrsand"
     placeOrder: "Bestellen"
     discount: "Rabatt"
+    code: "Code"
+    allDiscount: "Alle Rabatt"
