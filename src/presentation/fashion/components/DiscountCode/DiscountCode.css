@@ -5,6 +5,7 @@
   font-weight: bold
 }
 .code-container {
+  justify-content: end;
   display: flex;
   flex-wrap: wrap;
   flex-grow: 1;

@@ -21,9 +21,5 @@ export default {
         RemoveDiscountCodeForm,
         BasePrice,
     },
-    setup(props) {
-        console.log(props.code);
-        console.log(props.cart)
-    },
-
+    setup() {},
 };

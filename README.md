@@ -297,8 +297,10 @@ export default {
 > **DiscountCodes.js** was extended by computed property which map V% codes and component **BasePrice**
 ```js
 import { AVAILABLE_CODES_NAMES, CODES_STATUSES } from "../../../../../constants";
+import DiscountCode from "presentation/components/DiscountCode/DiscountCode.vue";
+
 export default {
-  components: { RemoveDiscountCodeForm, BasePrice },
+  components: { RemoveDiscountCodeForm, BasePrice, DiscountCode },
   (...)
   computed: {
     appliedCodes() {
@@ -328,19 +330,32 @@ export default {
       class="single-grand-total-right col-sm-6"
       data-test="discount-code-name"
     >
-        <div class="row code-container" v-for="code in appliedCodes" :key="code">
-          <b >{{code.code}}</b>
-          <b class="code-gap"></b>
-          <b class="code-value">
-            <BasePrice :price="{value: {centAmount: typeof code.value == 'number' ? -code.value : code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
-          </b>
-          <RemoveDiscountCodeForm
-            v-if="editable"
-            :cart="cart"
-            :code="code.code"
-          />
-        </div>
+       <div v-for="code in appliedCodes" :key="code">
+          <discount-code :code="code" :cart="cart" :editable="editable"></discount-code>
+       </div>
     </div>
+  </div>
+</template>
+```
+
+**DiscountCode.vue**, **DiscountCode.js** and **DiscountCode.css** was added. This component show single code element
+
+```vue
+<style src="./DiscountCode.css" scoped></style>
+<script src="./DiscountCode.js"></script>
+
+<template>
+  <div class="code-container">
+    <b>{{code.code}}</b>
+    <b class="code-gap"></b>
+    <b class="code-value">
+      <BasePrice :price="{value: {centAmount: typeof code.value == 'number' ? -code.value : code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
+    </b>
+    <RemoveDiscountCodeForm
+        v-if="editable"
+        :cart="cart"
+        :code="code.code"
+    />
   </div>
 </template>
 ```
