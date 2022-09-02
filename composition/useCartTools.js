@@ -12,8 +12,13 @@ function subTotal(cartLike) {
     0
   );
   const totalPriceCentAmount = cartLike.lineItems.reduce(
-    (acc, li) => acc + li.totalPrice.centAmount,
-    0
+      (acc, li) => {
+        if(li.price.discounted) {
+          return acc + li.quantity * li.price.discounted.value.centAmount
+        }else{
+          return acc + li.quantity * li.price.value.centAmount
+        }
+      }, 0
   );
   const discounted =
     priceCentAmount === totalPriceCentAmount
