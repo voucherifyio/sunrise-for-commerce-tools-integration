@@ -565,6 +565,7 @@ In **LimeItemInfo.js** was added computed function **quantityFromCode** that ret
 ```js
 import { AVAILABLE_CODES_NAMES, CODES_TYPES } from '../../../../../constants'
 import { useI18n } from 'vue-i18n';
+import {getPrice, getTotalPrice} from "hooks/useFixedPrice";
 
 export default {
     (...)
@@ -577,46 +578,11 @@ export default {
       selected,
       item,
       ...useCartTools(),
+      getPrice,
+      getTotalPrice
     };
    }
-   (...)
-   methods: {
-      getCouponFixedPrice(custom){
-         if(custom?.customFieldsRaw?.length > 0){
-            return custom?.customFieldsRaw.filter((element) => {
-               return element.name === 'coupon_fixed_price';
-            }).map((element) => element.value)[0];
-         } else {
-            return null
-         }
-      },
    
-      getPrice(lineItem){
-         const price = {
-            ...lineItem.price
-         }
-         const couponFixedPrice = this.getCouponFixedPrice(lineItem.custom);
-         if(couponFixedPrice){
-            price.discounted = {
-               value: {
-                  currencyCode: lineItem.price.value.currencyCode,
-                  fractionDigits: lineItem.price.value.fractionDigits,
-               }
-            }
-            price.discounted.value.centAmount = couponFixedPrice;
-         }
-   
-         return price;
-      },
-   
-      getTotalPrice(lineItem){
-         return {
-            ...lineItem,
-            price: this.getPrice(lineItem)
-         };
-      }
-   },
-
    computed: {
     quantityFromCode(props){
       const codeWithFreeItem = props.lineItem.custom?.customFieldsRaw
@@ -737,6 +703,54 @@ const returnVoucherifyCodes = (cart) => {
   return voucherifyCodes;
 }
 (...)
+```
+
+#### UseFixedPrice
+
+File **useFixedPrice.js** was added. Those functions are designed for handling fixed prices from coupons.
+
+```js
+export function getCouponFixedPrice(custom){
+    if(custom?.customFieldsRaw?.length > 0){
+        return custom?.customFieldsRaw.filter((element) => {
+            return element.name === 'coupon_fixed_price';
+        }).map((element) => element.value)[0];
+    } else {
+        return null
+    }
+}
+
+export function getPrice(lineItem){
+    const price = {
+        ...lineItem.price
+    }
+    const couponFixedPrice = getCouponFixedPrice(lineItem.custom);
+    if(couponFixedPrice){
+        price.discounted = {
+            value: {
+                currencyCode: lineItem.price.value.currencyCode,
+                fractionDigits: lineItem.price.value.fractionDigits,
+            }
+        }
+        price.discounted.value.centAmount = couponFixedPrice;
+    }
+
+    return price;
+}
+
+export function getTotalPrice(lineItem){
+    return {
+        ...lineItem,
+        price: getPrice(lineItem)
+    };
+}
+
+export function getSubTotal(cart){
+    return {
+        ...cart,
+        lineItems: cart.lineItems.map((lineItem) => getTotalPrice(lineItem))
+    }
+}
 ```
 
 #### UseShippingMethods
