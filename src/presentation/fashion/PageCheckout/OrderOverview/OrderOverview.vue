@@ -65,31 +65,33 @@
         v-on:card-paid="cardPaid"
         :key="cart.totalPrice.centAmount"
       />
-      <div class="mt-10"></div>
-      <div class="your-order-info">
-        <ul>
-          <li class="bold-text">
-            {{ t('code') }}
-            <span>{{ t('discount') }}</span>
-          </li>
-        </ul>
-      </div>
-      <div class="your-order-info order-subtotal">
-        <div v-for="code in appliedCodes" :key="code">
-          <discount-code :code="code" :cart="cart" :editable="false"></discount-code>
+      <div v-if="appliedCodes || appliedCodes">
+        <div class="mt-10"></div>
+        <div class="your-order-info">
+          <ul>
+            <li class="bold-text">
+              {{ t('code') }}
+              <span>{{ t('discount') }}</span>
+            </li>
+          </ul>
         </div>
-      </div>
-      <div class="your-order-info order-subtotal">
-        <ul>
-          <li>
-            <b class="bold-text">{{ t('allDiscount') }}</b>
-            <span class="code-value">
+        <div class="your-order-info order-subtotal">
+          <div v-for="code in appliedCodes" :key="code">
+            <discount-code :code="code" :cart="cart" :editable="false"></discount-code>
+          </div>
+        </div>
+        <div class="your-order-info order-subtotal">
+          <ul>
+            <li>
+              <b class="bold-text">{{ t('allDiscount') }}</b>
+              <span class="code-value">
               <b>
                 <BasePrice :price="{ value: discountValue }" />
               </b>
             </span>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="your-order-info order-total">
         <ul>
