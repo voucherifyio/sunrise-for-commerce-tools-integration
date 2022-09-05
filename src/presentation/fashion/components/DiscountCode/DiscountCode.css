@@ -1,0 +1,18 @@
+.applied-discounts {
+  margin-bottom: 1em;
+}
+.discount-code {
+  font-weight: bold
+}
+.code-container {
+  justify-content: end;
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+}
+.code-gap {
+  flex-grow: 1;
+}
+.code-value {
+  color: rgb(0,222,0);
+}

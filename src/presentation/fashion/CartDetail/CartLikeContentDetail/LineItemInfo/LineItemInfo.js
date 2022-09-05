@@ -1,12 +1,11 @@
 import BasePrice from 'presentation/components/BasePrice/BasePrice.vue';
 import {computed, shallowRef, watch} from 'vue';
 import LineItemQuantityForm from 'presentation/components/LineItemQuantityForm/LineItemQuantityForm.vue';
-
 import Remove from 'presentation/components/LineItemQuantityForm/Remove/Remove.vue';
 import useCartTools from 'hooks/useCartTools';
-
 import {AVAILABLE_CODES_NAMES, CODES_TYPES} from '../../../../../constants'
 import {useI18n} from 'vue-i18n';
+import {getPrice, getTotalPrice} from "hooks/useFixedPrice";
 
 export default {
   components: {
@@ -58,44 +57,9 @@ export default {
       selected,
       item,
       ...useCartTools(),
+      getPrice,
+      getTotalPrice
     };
-  },
-
-  methods: {
-    getCouponFixedPrice(custom){
-      if(custom?.customFieldsRaw?.length > 0){
-        return custom?.customFieldsRaw.filter((element) => {
-          return element.name === 'coupon_fixed_price';
-        }).map((element) => element.value)[0];
-      } else {
-        return null
-      }
-    },
-
-    getPrice(lineItem){
-      const price = {
-        ...lineItem.price
-      }
-      const couponFixedPrice = this.getCouponFixedPrice(lineItem.custom);
-      if(couponFixedPrice){
-        price.discounted = {
-          value: {
-            currencyCode: lineItem.price.value.currencyCode,
-            fractionDigits: lineItem.price.value.fractionDigits,
-          }
-        }
-        price.discounted.value.centAmount = couponFixedPrice;
-      }
-
-      return price;
-    },
-
-    getTotalPrice(lineItem){
-      return {
-        ...lineItem,
-        price: this.getPrice(lineItem)
-      };
-    }
   },
 
   computed: {
