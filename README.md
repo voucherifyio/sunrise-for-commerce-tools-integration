@@ -518,7 +518,7 @@ export default {
 
 ### CartLikeContentDetail/LimeItemInfo
 
-Here was shown a discount for single product
+Here was shown a discount for single product and changing in showing BasePrice. This change is related to fixed price promotions for line items.
 
 **LimeItemInfo.vue**
 
@@ -529,6 +529,20 @@ Here was shown a discount for single product
     {{ t('discounted') }} : {{quantityFromCode}}
   </b>
 </td>
+<td v-if="!selectable" class="product-price">
+   <span class="amount" data-test="item-price">
+      <BasePrice :price="getPrice(lineItem)"/>
+   </span>
+</td>
+(...)
+<td v-if="!selectable"
+    class="product-total"
+    data-test="line-total"
+>
+   <span>
+      <BasePrice :price="total(getTotalPrice(lineItem))" />
+   </span>
+</td>
 ```
 
 In **LimeItemInfo.js** was added computed function **quantityFromCode** that return unit type codes applied to products 
@@ -538,20 +552,57 @@ import { AVAILABLE_CODES_NAMES, CODES_TYPES } from '../../../../../constants'
 import { useI18n } from 'vue-i18n';
 
 export default {
-  (...)
-  setup(props, { emit }) {
+    (...)
+    setup(props, { emit }) {
     (...)
     const { t } = useI18n();
-
+   
     return {
       t,
       selected,
       item,
       ...useCartTools(),
     };
-  }
-  (...)
-  computed: {
+   }
+   (...)
+   methods: {
+      getCouponFixedPrice(custom){
+         if(custom?.customFieldsRaw?.length > 0){
+            return custom?.customFieldsRaw.filter((element) => {
+               return element.name === 'coupon_fixed_price';
+            }).map((element) => element.value)[0];
+         } else {
+            return null
+         }
+      },
+   
+      getPrice(lineItem){
+         const price = {
+            ...lineItem.price
+         }
+         const couponFixedPrice = this.getCouponFixedPrice(lineItem.custom);
+         if(couponFixedPrice){
+            price.discounted = {
+               value: {
+                  currencyCode: lineItem.price.value.currencyCode,
+                  fractionDigits: lineItem.price.value.fractionDigits,
+               }
+            }
+            price.discounted.value.centAmount = couponFixedPrice;
+         }
+   
+         return price;
+      },
+   
+      getTotalPrice(lineItem){
+         return {
+            ...lineItem,
+            price: this.getPrice(lineItem)
+         };
+      }
+   },
+
+   computed: {
     quantityFromCode(props){
       const codeWithFreeItem = props.lineItem.custom?.customFieldsRaw
           .find(code => code.name === AVAILABLE_CODES_NAMES.APPLIED_CODES)
@@ -563,10 +614,10 @@ export default {
           .find(code => code.type === CODES_TYPES.UNIT)
           .totalDiscountQuantity
       }
-
+   
       return 0
     }
-  }
+   }
 }
 ```
 
@@ -579,6 +630,13 @@ en:
 de:
   available: "Verfügbar"
   discounted: "Ermäßigt"
+```
+
+In **style.css** added new styles
+```css
+.new-price > span{
+  color: rgb(0,222,0) !important;
+}
 ```
 
 ### Promotions
@@ -620,10 +678,33 @@ export const removeVoucherifyCode = () => [
 ];
 ```
 
-Functions in **composition/useCartTools.js** for checking if V% discount codes exist and for returning it.
+Functions in **composition/useCartTools.js** for checking if V% discount codes exist and for returning it. And changing in `total` 
+function that allow to calculate total value including fixed price amount if applied. 
 
 ```js
 import { AVAILABLE_CODES_NAMES } from '../src/constants'
+(...)
+const total = (lineItem) => {
+   if (lineItem.price.discounted) {
+      return {
+         value: {
+            ...lineItem.price.value,
+            centAmount:
+                    lineItem.price.value.centAmount *
+                    lineItem.quantity,
+         },
+         discounted: {
+            value: {
+               ...lineItem.price.discounted.value,
+               centAmount:
+                       lineItem.price.discounted.value.centAmount *
+                       lineItem.quantity,
+            },
+         },
+      };
+   }
+   return { value: lineItem.totalPrice };
+};
 (...)
 const discountVoucherifyCodesExist = (cart) => {
   let codeExist = false;

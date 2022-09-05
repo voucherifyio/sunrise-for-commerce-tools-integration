@@ -49,7 +49,12 @@ const total = (lineItem) => {
           lineItem.quantity,
       },
       discounted: {
-        value: lineItem.totalPrice,
+        value: {
+          ...lineItem.price.discounted.value,
+          centAmount:
+              lineItem.price.discounted.value.centAmount *
+              lineItem.quantity,
+        },
       },
     };
   }
