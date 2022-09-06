@@ -50,6 +50,6 @@ export default {
       const couponLimit = props.cart.custom.customFieldsRaw.find(field => field.name === 'couponsLimit')
 
       return couponLimit?.value ?? 5;
-    }
+    },
   }
 };
