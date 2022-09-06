@@ -33,6 +33,12 @@ export default {
         return customLineItemWithDiscount.totalPrice
       }
       return 0
+    },
+
+    isValidationFailed(props){
+      const isValidationFailed = props.cart.custom.customFieldsRaw.find(field => field.name === 'isValidationFailed')
+
+      return isValidationFailed?.value ?? false;
     }
   }
 };

@@ -6,7 +6,6 @@ import CartLikePriceDetail from './CartLikePriceDetail/CartLikePriceDetail.vue';
 import useCartTools from 'hooks/useCartTools';
 import useCart from 'hooks/useCart';
 
-// import AddDiscountCodeForm from '../AddDiscountCodeForm/AddDiscountCodeForm.vue';
 export default {
   name: 'CartDetail',
   components: {
