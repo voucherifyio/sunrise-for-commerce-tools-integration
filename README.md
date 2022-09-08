@@ -333,18 +333,14 @@ In **styles.css** and **CartLikePriceDetail.txt** styles and translates were add
 ```js
 import { AVAILABLE_CODES_NAMES, CODES_STATUSES } from "../../../../../constants";
 import DiscountCode from "presentation/components/DiscountCode/DiscountCode.vue";
+import useAppliedCodes from "hooks/useAppliedCodes";
 
 export default {
   components: { RemoveDiscountCodeForm, BasePrice, DiscountCode },
   (...)
   computed: {
     appliedCodes() {
-        const appliedCodes = this.cart.custom?.customFieldsRaw
-            .filter(field => field.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES)
-            .reduce(customField => customField)
-            .value
-            .map(code => JSON.parse(code))
-            .filter(code => code.status === CODES_STATUSES.APPLIED)
+        const appliedCodes = useAppliedCodes(this);
 
         return appliedCodes.length ? appliedCodes : false
     }
@@ -495,7 +491,8 @@ In **AddDiscountCodeForm.js** there are new logic for adding V% codes in applyDi
 (...)
 import { ref, watch } from 'vue';
 import useVuelidate from '@vuelidate/core';
-import { CODES_STATUSES } from '../../../../constants'
+import { CODES_STATUSES } from '../../../../constants';
+import useCouponsLimitExceeded from "hooks/useCouponsLimitExceeded";
 
 export default {
   components: {
@@ -967,6 +964,35 @@ export default () => {
   };
 };
 
+```
+
+**/composition/useAppliedCodes.js** is used for getting applied codes from cart custom fields.
+
+```js
+import {AVAILABLE_CODES_NAMES, CODES_STATUSES} from "@/constants";
+
+export default function useAppliedCodes(props) {
+    return props.cart.custom?.customFieldsRaw
+        .filter(field => field.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES)
+        .reduce(customField => customField)
+        .value
+        .map(code => JSON.parse(code))
+        .filter(code => code.status === CODES_STATUSES.APPLIED)
+}
+```
+
+
+**/composition/useCouponsLimitExceeded.js** is used for checking is current applied codes exceed coupons limit. 
+
+```js
+import useAppliedCodes from "hooks/useAppliedCodes";
+
+export default function useCouponsLimitExceeded(props) {
+    const couponLimit = props.cart.custom.customFieldsRaw.find(field => field.name === 'couponsLimit')
+    const appliedCodes = useAppliedCodes(props)
+
+    return appliedCodes.length >= (couponLimit?.value ?? 5);
+}
 ```
 
 
