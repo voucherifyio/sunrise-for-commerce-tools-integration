@@ -232,10 +232,19 @@ you need to make some changes in code. You can simply use our Sunrise fork with 
 
 ### CartLikePriceDetail
 
-In **CartLikePriceDetail.vue** DiscountCodes component was made dependen on discountVoucherifyCodesExist and template about discount was a bit changed
+In **CartLikePriceDetail.vue** DiscountCodes component was made dependent on discountVoucherifyCodesExist and template about discount was a bit changed
 
 ```vue
 <div>
+   <Promotions v-if="!couponsLimitExceeded"
+               :cart="cart"
+               :editable="editable"
+   />
+   <div v-else>
+           <span class="voucher-error">
+             {{t('couponsLimitExceeded')}} {{couponsLimit}}
+           </span>
+   </div>
    (...)
    <DiscountCodes
      v-if="discountVoucherifyCodesExist(cart)"
@@ -284,6 +293,7 @@ In **CartLikePriceDetail.vue** DiscountCodes component was made dependen on disc
 
 ```js
 import {CUSTOM_LINE_ITEM_VOUCHER_SLUG} from '../../../../constants'
+import useCouponsLimitExceeded from "hooks/useCouponsLimitExceeded";
 
 export default {
   (...)
@@ -300,6 +310,16 @@ export default {
       const isValidationFailed = props.cart.custom.customFieldsRaw.find(field => field.name === 'isValidationFailed')
       
       return isValidationFailed?.value ?? false;
+    },
+
+    couponsLimitExceeded(props){
+       return useCouponsLimitExceeded(props);
+    },
+   
+    couponsLimit(props){
+       const couponLimit = props.cart.custom.customFieldsRaw.find(field => field.name === 'couponsLimit')
+   
+       return couponLimit?.value ?? 5;
     }
   }
 };
