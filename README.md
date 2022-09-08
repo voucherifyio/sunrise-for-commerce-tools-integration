@@ -483,6 +483,12 @@ In **AddDiscountCodeForm.vue** component ServeError was replaced from
 </p>
 ```
 
+Property
+```vue
+:disabled="couponsLimitExceeded"
+```
+Was added to BaseInput and Input elements.
+
 In **AddDiscountCodeForm.js** there are new logic for adding V% codes in applyDiscount() and watch that handle errors in added codes.
 
 ```js
@@ -563,6 +569,12 @@ export default {
       v,
     };
   },
+   
+  computed: {
+     couponsLimitExceeded(props) {
+        return useCouponsLimitExceeded(props);
+     }
+  }
 };
 ```
 

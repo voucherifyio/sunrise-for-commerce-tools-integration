@@ -7,7 +7,8 @@ import useCartTools from 'hooks/useCartTools';
 // import useDiscountCode from 'hooks/useDiscountCode';
 import { ref, watch } from 'vue';
 import useVuelidate from '@vuelidate/core';
-import { CODES_STATUSES } from '../../../../constants'
+import {CODES_STATUSES} from '../../../../constants'
+import useCouponsLimitExceeded from "hooks/useCouponsLimitExceeded";
 
 export default {
   components: {
@@ -81,4 +82,10 @@ export default {
       v,
     };
   },
+
+  computed: {
+    couponsLimitExceeded(props) {
+      return useCouponsLimitExceeded(props);
+    }
+  }
 };
