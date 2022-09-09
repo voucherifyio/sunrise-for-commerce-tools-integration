@@ -15,11 +15,13 @@
         type="text"
         id="promo-code"
         data-test="discount-code-input"
+        :disabled="couponsLimitExceeded"
       />
       <button
         class="coupon-btn"
         type="submit"
         data-test="apply-discount-code-button"
+        :disabled="couponsLimitExceeded"
       >
         {{ t('apply') }}
       </button>

@@ -7,6 +7,7 @@ en:
   discount: "Discount"
   checkout: "Checkout"
   validationError: "The validation failed. All coupons have been removed."
+  couponsLimitExceeded: "You have exceeded the coupon limit of"
 de:
   cartTotals: "Warenkorbsummen"
   subtotal: "Zwischensumme"
@@ -16,3 +17,4 @@ de:
   discount: "Rabatt"
   checkout: "Zur Kasse"
   validationError: "Die Validierung ist fehlgeschlagen. Alle Coupons wurden entfernt."
+  couponsLimitExceeded: "Sie haben das Couponlimit überschritten von"
