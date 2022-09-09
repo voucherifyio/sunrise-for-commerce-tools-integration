@@ -1,6 +1,6 @@
 {
   "name": "sunrise",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -67,9 +67,25 @@
       "requireConfigFile": false
     },
     "rules": {
-      "vue/multi-word-component-names": ["error", {
-        "ignores": ["Spinner", "Pagination", "Remove", "User", "Login", "Home", "Selector", "Header", "Footer", "Promotions", "Banner", "Root"]
-      }]
+      "vue/multi-word-component-names": [
+        "error",
+        {
+          "ignores": [
+            "Spinner",
+            "Pagination",
+            "Remove",
+            "User",
+            "Login",
+            "Home",
+            "Selector",
+            "Header",
+            "Footer",
+            "Promotions",
+            "Banner",
+            "Root"
+          ]
+        }
+      ]
     },
     "overrides": [
       {
