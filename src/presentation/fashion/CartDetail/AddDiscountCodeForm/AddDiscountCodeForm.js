@@ -7,7 +7,8 @@ import useCartTools from 'hooks/useCartTools';
 // import useDiscountCode from 'hooks/useDiscountCode';
 import { ref, watch } from 'vue';
 import useVuelidate from '@vuelidate/core';
-import { CODES_STATUSES } from '../../../../constants'
+import {CODES_STATUSES} from '../../../../constants'
+import useCouponsLimitExceeded from "hooks/useCouponsLimitExceeded";
 
 export default {
   components: {
@@ -65,8 +66,17 @@ export default {
       const codes = returnVoucherifyCodes(props.cart).map(code => JSON.parse(code))
       const lastAppliedCode = codes.find(code => code.code === enteredCode.value)
       if(lastAppliedCode) {
+        let message = ''
+        if(lastAppliedCode) {
+          if(lastAppliedCode.status !== CODES_STATUSES.APPLIED) {
+            message = lastAppliedCode.errMsg
+          } else if(lastAppliedCode.status !== CODES_STATUSES.NEW) {
+            message = lastAppliedCode.status
+          }
+        }
+
         codesInfo.value = {
-          message: lastAppliedCode ? `${lastAppliedCode.status !== CODES_STATUSES.APPLIED && lastAppliedCode.errMsg ? lastAppliedCode.errMsg : lastAppliedCode.status}` : '',
+          message: message,
           status: lastAppliedCode.status === CODES_STATUSES.APPLIED ? true : false,
         }
       }
@@ -81,4 +91,10 @@ export default {
       v,
     };
   },
+
+  computed: {
+    couponsLimitExceeded(props) {
+      return useCouponsLimitExceeded(props);
+    }
+  }
 };

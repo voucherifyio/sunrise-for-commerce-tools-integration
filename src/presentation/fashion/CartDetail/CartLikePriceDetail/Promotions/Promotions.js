@@ -44,6 +44,9 @@ export default {
 
   computed: {
     availablePromotions(props) {
+      if(!props.cart.custom?.customFieldsRaw.length) {
+        return false
+      }
       const availablePromos = props.cart.custom?.customFieldsRaw
         .filter(field => field.name === AVAILABLE_CODES_NAMES.DISCOUNT_CODES)
         .reduce(customField => customField)

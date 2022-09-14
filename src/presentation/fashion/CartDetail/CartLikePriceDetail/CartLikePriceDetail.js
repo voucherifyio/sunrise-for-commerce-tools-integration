@@ -4,6 +4,7 @@ import DiscountCodes from './DiscountCodes/DiscountCodes.vue';
 import Promotions from './Promotions/Promotions.vue';
 import useCartTools from 'hooks/useCartTools';
 import {CUSTOM_LINE_ITEM_VOUCHER_SLUG} from '../../../../constants'
+import useCouponsLimitExceeded from "hooks/useCouponsLimitExceeded";
 
 export default {
   components: {
@@ -33,6 +34,22 @@ export default {
         return customLineItemWithDiscount.totalPrice
       }
       return 0
+    },
+
+    isValidationFailed(props){
+      const isValidationFailed = props.cart.custom.customFieldsRaw.find(field => field.name === 'isValidationFailed')
+
+      return isValidationFailed?.value ?? false;
+    },
+
+    couponsLimitExceeded(props){
+      return useCouponsLimitExceeded(props);
+    },
+
+    couponsLimit(props){
+      const couponLimit = props.cart.custom.customFieldsRaw.find(field => field.name === 'couponsLimit')
+
+      return couponLimit?.value ?? 5;
     }
   }
 };

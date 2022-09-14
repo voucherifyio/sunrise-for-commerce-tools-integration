@@ -32,11 +32,17 @@
           </span>
         </div>
       </div>
-      
-      <Promotions 
+
+      <Promotions v-if="!couponsLimitExceeded"
         :cart="cart"
         :editable="editable"
       />
+      <div v-else>
+        <span class="voucher-error">
+          {{t('couponsLimitExceeded')}} {{couponsLimit}}
+        </span>
+      </div>
+
       <div class="mb-20"></div>
       <DiscountCodes
         v-if="discountVoucherifyCodesExist(cart)"
@@ -44,6 +50,11 @@
         :editable="editable"
       />
 
+    <div v-if="isValidationFailed" class="voucher-error">
+      <b>
+        {{ t('validationError') }}
+      </b>
+    </div>
 
     </div>
     <div class="cart-total-wrap">

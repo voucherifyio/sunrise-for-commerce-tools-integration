@@ -8,7 +8,7 @@
       <span>{{ t('appliedDiscounts') }}</span>
     </div>
   </div>
-  <div class="single-grand-total">
+  <div class="single-grand-total" v-if="appliedCodes">
     <div
       class="single-grand-total-right col-sm-12"
       data-test="discount-code-name"
