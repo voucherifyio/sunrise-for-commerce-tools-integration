@@ -72,7 +72,7 @@ export default {
           .value
           .map(code => JSON.parse(code))
           .find(code => code.type === CODES_TYPES.UNIT)
-          .totalDiscountQuantity
+          ?.totalDiscountQuantity
       }
 
       return 0
