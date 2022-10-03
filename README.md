@@ -933,6 +933,7 @@ const useShippingMethods = ({
          }
          setShippingMethods(data.shippingMethodsByCart);
       },
+      fetchPolicy: 'network-only'
    });
    return { shippingMethods, loading, error };
 };
