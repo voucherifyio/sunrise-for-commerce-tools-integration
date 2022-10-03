@@ -49,7 +49,7 @@ export default {
     watch(
       [cart, loading, orderComplete],
       ([cart, loading, orderComplete]) => {
-        if (!orderComplete && !cart && !loading) {
+        if (!orderComplete && (cart !== undefined && !cart?.cartId) && !loading) {
           router.replace({ path: '/' });
         }
       }
