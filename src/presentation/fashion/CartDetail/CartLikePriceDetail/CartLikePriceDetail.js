@@ -35,7 +35,10 @@ export default {
             CUSTOM_LINE_ITEM_VOUCHER_SLUG
           )
         );
-      console.log(props.cart?.custom?.customFieldsRaw);
+      if (customLineItemWithDiscount?.centAmount) {
+        return customLineItemWithDiscount;
+      }
+
       const discountCodes =
         props.cart?.custom?.customFieldsRaw
           ?.find(
@@ -51,9 +54,6 @@ export default {
           )
         : 0;
 
-      if (customLineItemWithDiscount?.centAmount) {
-        return customLineItemWithDiscount;
-      }
       return sum
         ? {
             centAmount: -sum,
