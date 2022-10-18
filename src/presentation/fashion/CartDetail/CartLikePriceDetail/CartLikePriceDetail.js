@@ -47,7 +47,9 @@ export default {
           )
           ?.value?.map((coupon) => JSON.parse(coupon))
           .filter((coupon) => coupon.status === 'APPLIED');
-      const sum = discountCodes?.length
+      const sum = discountCodes.filter(
+        (code) => typeof code.value === 'number'
+      )?.length
         ? discountCodes.reduce(
             (acc, code) => acc + code.value,
             0

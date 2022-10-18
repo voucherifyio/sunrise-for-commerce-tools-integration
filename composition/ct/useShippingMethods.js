@@ -13,6 +13,7 @@ const query = gql`
       name
       localizedDescription(locale: $locale)
       isDefault
+      key
       zoneRates {
         shippingRates {
           isMatching

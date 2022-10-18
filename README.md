@@ -25,7 +25,10 @@ This repository is a fork from [Sunrise SPA](https://github.com/commercetools/su
    3. [CartLikePriceDetail/DiscountCodes/RemoveDiscountCodeForm](#cartlikepricedetaildiscountcodesremovediscountcodeform)
    4. [AddDiscountCodeForm](#adddiscountcodeform)
    5. [CartLikeContentDetail/LimeItemInfo](#cartlikecontentdetaillimeiteminfo)
-   6. [Other changes](#other-changes)
+   6. [Promotions](#promotions)
+   7. [Order overview](#orderoverview)
+   8. [Shipping method](#shippingmethod)
+   9. [Other changes](#other-changes)
 7. [Contributing](#contributing)
 8. [Changelog](#changelog)
 9. [Contact](#contact)
@@ -725,6 +728,36 @@ export default {
 
 Template **OrderOverview.vue** was extended by showing discounts and fixed prices.
 
+
+### Shipping method
+
+Changes in **ShippingMethod.js** are related to auto setting shipping method when code for free shipping were applied.
+
+```js
+(...)
+export default {
+   (...)
+   setup(props) {
+      (...)
+      watch(shippingMethods, (shippingMethods) => {
+         if (
+                 !props.cart?.shippingInfo?.shippingMethod
+                         ?.methodId &&
+                 Boolean(shippingMethods?.length)
+         ) {
+            selectedShippingMethod.value = (
+                    shippingMethods.find(({key}) => key === 'FREE_SHIPPING_DEFAULT') ||
+                    shippingMethods.find(
+                            ({ isDefault }) => isDefault
+                    ) || shippingMethods[0]
+            ).methodId;
+         }
+      });
+      (...)
+   }
+}
+```
+
 ```vue
 (...)
 <BasePrice :price="getPrice(lineItem)"></BasePrice>
@@ -918,6 +951,8 @@ const query = gql`
     shippingMethodsByCart(
       id: $cartId
     ) {
+      (...)
+      key
       (...)
     }
   }

@@ -34,6 +34,7 @@ export default {
         Boolean(shippingMethods?.length)
       ) {
         selectedShippingMethod.value = (
+          shippingMethods.find(({key}) => key === 'FREE_SHIPPING_DEFAULT') ||
           shippingMethods.find(
             ({ isDefault }) => isDefault
           ) || shippingMethods[0]
