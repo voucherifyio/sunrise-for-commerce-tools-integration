@@ -8,7 +8,7 @@ export default {
       type: Object,
       reqired: true,
     },
-    code : {
+    code: {
       type: String,
       reqired: true,
     },
@@ -21,20 +21,20 @@ export default {
 
     const removeDiscount = () => {
       const codes = returnVoucherifyCodes(props.cart)
-        .map(code => JSON.parse(code))
-        .map(code => {
-          if(code.code === props.code) {
+        .map((code) => JSON.parse(code))
+        .map((code) => {
+          if (code.code === props.code) {
             return {
               code: code.code,
               value: code.value,
               status: CODES_STATUSES.DELETED,
-              type: code.type
-            }
+              type: code?.type,
+            };
           }
-          return code
-        })
-        
-      applyVoucherifyDiscount(codes)
+          return code;
+        });
+
+      applyVoucherifyDiscount(codes);
     };
     return { removeDiscount };
   },

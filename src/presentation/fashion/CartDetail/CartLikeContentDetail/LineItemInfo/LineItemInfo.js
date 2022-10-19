@@ -1,11 +1,17 @@
 import BasePrice from 'presentation/components/BasePrice/BasePrice.vue';
-import {computed, shallowRef, watch} from 'vue';
+import { computed, shallowRef, watch } from 'vue';
 import LineItemQuantityForm from 'presentation/components/LineItemQuantityForm/LineItemQuantityForm.vue';
 import Remove from 'presentation/components/LineItemQuantityForm/Remove/Remove.vue';
 import useCartTools from 'hooks/useCartTools';
-import {AVAILABLE_CODES_NAMES, CODES_TYPES} from '../../../../../constants'
-import {useI18n} from 'vue-i18n';
-import {getPrice, getTotalPrice} from "hooks/useFixedPrice";
+import {
+  AVAILABLE_CODES_NAMES,
+  CODES_TYPES,
+} from '../../../../../constants';
+import { useI18n } from 'vue-i18n';
+import {
+  getPrice,
+  getTotalPrice,
+} from 'hooks/useFixedPrice';
 
 export default {
   components: {
@@ -58,24 +64,27 @@ export default {
       item,
       ...useCartTools(),
       getPrice,
-      getTotalPrice
+      getTotalPrice,
     };
   },
 
   computed: {
-    quantityFromCode(props){
-      const codeWithFreeItem = props.lineItem.custom?.customFieldsRaw
-        .find(code => code.name === AVAILABLE_CODES_NAMES.APPLIED_CODES)
+    quantityFromCode(props) {
+      const codeWithFreeItem =
+        props.lineItem.custom?.customFieldsRaw.find(
+          (code) =>
+            code.name ===
+            AVAILABLE_CODES_NAMES.APPLIED_CODES
+        );
 
-      if(codeWithFreeItem) {
-        return codeWithFreeItem
-          .value
-          .map(code => JSON.parse(code))
-          .find(code => code.type === CODES_TYPES.UNIT)
-          ?.totalDiscountQuantity
+      if (codeWithFreeItem) {
+        return codeWithFreeItem.value
+          .map((code) => JSON.parse(code))
+          .find((code) => code?.type === CODES_TYPES.UNIT)
+          ?.totalDiscountQuantity;
       }
 
-      return 0
-    }
-  }
+      return 0;
+    },
+  },
 };

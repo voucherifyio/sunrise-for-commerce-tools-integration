@@ -40,23 +40,23 @@ export default {
       }
 
       const discountCodes =
-        props.cart?.custom?.customFieldsRaw
+        props?.cart?.custom?.customFieldsRaw
           ?.find(
             (customFieldRaw) =>
               customFieldRaw.name === 'discount_codes'
           )
           ?.value?.map((coupon) => JSON.parse(coupon))
           .filter((coupon) => coupon.status === 'APPLIED');
-      const sum = discountCodes.filter(
-        (code) => typeof code.value === 'number'
+      const sum = discountCodes?.filter(
+        (code) => typeof code?.value === 'number'
       )?.length
         ? discountCodes.reduce(
-            (acc, code) => acc + code.value,
+            (acc, code) => acc + code?.value,
             0
           )
         : 0;
 
-      return sum
+      return typeof sum === 'number'
         ? {
             centAmount: -sum,
             fractionDigits: 2,
