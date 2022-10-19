@@ -56,13 +56,11 @@ export default {
           )
         : 0;
 
-      return typeof sum === 'number'
-        ? {
-            centAmount: -sum,
-            fractionDigits: 2,
-            __typename: 'Money',
-          }
-        : 0;
+      return {
+        centAmount: typeof sum === 'number' ? -sum : 0,
+        fractionDigits: 2,
+        __typename: 'Money',
+      };
     },
 
     isValidationFailed(props) {

@@ -6,9 +6,7 @@ const query = gql`
     $cartId: String!
     $locale: Locale!
   ) {
-    shippingMethodsByCart(
-      id: $cartId
-    ) {
+    shippingMethodsByCart(id: $cartId) {
       methodId: id
       name
       localizedDescription(locale: $locale)
@@ -32,9 +30,7 @@ const query = gql`
 
 //this is the React api useQuery(query,options)
 // https://www.apollographql.com/docs/react/api/react/hooks/#function-signature
-const useShippingMethods = ({
-  cartId, locale
-}) => {
+const useShippingMethods = ({ cartId, locale }) => {
   const [shippingMethods, setShippingMethods] = useState();
 
   const { loading, error } = useQueryFacade(query, {
@@ -46,9 +42,52 @@ const useShippingMethods = ({
       if (!data) {
         return;
       }
-      setShippingMethods(data.shippingMethodsByCart);
+      const sortShippingMethods = (shippingMethods) => {
+        const shippingMethodsWithAveragePrice =
+          shippingMethods.map((shippingMethod) => {
+            let totalPrice = 0;
+            let numberOfZoneRates = 0;
+            for (const zoneRate of shippingMethod.zoneRates) {
+              for (const shippingRate of zoneRate.shippingRates) {
+                if (
+                  shippingRate.price.centAmount &&
+                  shippingRate.price.fractionDigits
+                ) {
+                  totalPrice +=
+                    shippingRate.price.centAmount /
+                    10 ** shippingRate.price.fractionDigits;
+                  numberOfZoneRates++;
+                }
+              }
+            }
+            return {
+              price:
+                numberOfZoneRates > 0
+                  ? totalPrice / numberOfZoneRates
+                  : 0,
+              shippingMethod,
+            };
+          });
+        return shippingMethodsWithAveragePrice
+          .sort(
+            (
+              shippingMethodsWithAveragePrice1,
+              shippingMethodsWithAveragePrice2
+            ) =>
+              shippingMethodsWithAveragePrice1.price -
+              shippingMethodsWithAveragePrice2.price
+          )
+          .map(
+            (shippingMethodsWithAveragePrice) =>
+              shippingMethodsWithAveragePrice.shippingMethod
+          );
+      };
+      sortShippingMethods(data.shippingMethodsByCart);
+      setShippingMethods(
+        sortShippingMethods(data.shippingMethodsByCart)
+      );
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
   });
   return { shippingMethods, loading, error };
 };
