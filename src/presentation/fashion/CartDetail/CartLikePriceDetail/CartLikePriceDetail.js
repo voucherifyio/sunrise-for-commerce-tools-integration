@@ -48,19 +48,20 @@ export default {
           ?.value?.map((coupon) => JSON.parse(coupon))
           .filter((coupon) => coupon.status === 'APPLIED');
       const sum = discountCodes?.filter(
-        (code) => typeof code?.value === 'number'
+        (code) => !isNaN(parseInt(code?.value))
       )?.length
-        ? discountCodes.reduce(
-            (acc, code) => acc + code?.value,
-            0
-          )
+        ? discountCodes
+            .filter((code) => !isNaN(parseInt(code?.value)))
+            ?.reduce((acc, code) => acc + code?.value, 0)
         : 0;
 
-      return {
-        centAmount: typeof sum === 'number' ? -sum : 0,
-        fractionDigits: 2,
-        __typename: 'Money',
-      };
+      return typeof sum === 'number'
+        ? {
+            centAmount: -sum,
+            fractionDigits: 2,
+            __typename: 'Money',
+          }
+        : 0;
     },
 
     isValidationFailed(props) {
