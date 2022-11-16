@@ -7,8 +7,8 @@ import useCartTools from 'hooks/useCartTools';
 // import useDiscountCode from 'hooks/useDiscountCode';
 import { ref, watch } from 'vue';
 import useVuelidate from '@vuelidate/core';
-import {CODES_STATUSES} from '../../../../constants'
-import useCouponsLimitExceeded from "hooks/useCouponsLimitExceeded";
+import { CODES_STATUSES } from '../../../../constants';
+import useCouponsLimitExceeded from 'hooks/useCouponsLimitExceeded';
 
 export default {
   components: {
@@ -23,8 +23,8 @@ export default {
     },
   },
   setup(props) {
-    const codesInfo = ref({})
-    const enteredCode = ref('')
+    const codesInfo = ref({});
+    const enteredCode = ref('');
     const { t } = useI18n();
     const {
       applyVoucherifyDiscount,
@@ -33,23 +33,36 @@ export default {
 
     const form = ref({});
 
-    const v = useVuelidate({
-      code: {}
-    }, form)
+    const v = useVuelidate(
+      {
+        code: {},
+      },
+      form
+    );
 
     const applyDiscount = () => {
       enteredCode.value = form.value.code;
 
       const codes = returnVoucherifyCodes(props.cart)
-          .map(code => JSON.parse(code))
-          .filter(code => Object.values(CODES_STATUSES).includes(code.status));
+        .map((code) => JSON.parse(code))
+        .filter((code) =>
+          Object.values(CODES_STATUSES).includes(
+            code.status
+          )
+        );
 
-      form.value.code = ''
+      form.value.code = '';
 
-      if(enteredCode.value){
-        return applyVoucherifyDiscount([...codes, { code: enteredCode.value, status: CODES_STATUSES.NEW }])
-      }else{
-        return applyVoucherifyDiscount([...codes])
+      if (enteredCode.value) {
+        return applyVoucherifyDiscount([
+          ...codes,
+          {
+            code: enteredCode.value,
+            status: CODES_STATUSES.NEW,
+          },
+        ]);
+      } else {
+        return applyVoucherifyDiscount([...codes]);
       }
     };
 
@@ -62,25 +75,43 @@ export default {
       return t('unknownError');
     };
 
-    watch(props, props => {
-      const codes = returnVoucherifyCodes(props.cart).map(code => JSON.parse(code))
-      const lastAppliedCode = codes.find(code => code.code === enteredCode.value)
-      if(lastAppliedCode) {
-        let message = ''
-        if(lastAppliedCode) {
-          if(lastAppliedCode.status !== CODES_STATUSES.APPLIED) {
-            message = lastAppliedCode.errMsg
-          } else if(lastAppliedCode.status !== CODES_STATUSES.NEW) {
-            message = lastAppliedCode.status
+    watch(props, (props) => {
+      const codes = returnVoucherifyCodes(props.cart).map(
+        (code) => JSON.parse(code)
+      );
+      const lastAppliedCode = codes.find(
+        (code) => code.code === enteredCode.value
+      );
+      if (lastAppliedCode) {
+        let message = '';
+        if (lastAppliedCode) {
+          if (
+            lastAppliedCode.status !==
+            CODES_STATUSES.APPLIED
+          ) {
+            message = lastAppliedCode.errMsg;
+          } else if (
+            lastAppliedCode.status !== CODES_STATUSES.NEW
+          ) {
+            message = lastAppliedCode.status;
           }
         }
 
         codesInfo.value = {
           message: message,
-          status: lastAppliedCode.status === CODES_STATUSES.APPLIED ? true : false,
-        }
+          status:
+            lastAppliedCode.status ===
+            CODES_STATUSES.APPLIED
+              ? true
+              : false,
+        };
+      } else {
+        codesInfo.value = {
+          message: 'APPLIED',
+          status: true,
+        };
       }
-    })
+    });
 
     return {
       t,
@@ -95,6 +126,6 @@ export default {
   computed: {
     couponsLimitExceeded(props) {
       return useCouponsLimitExceeded(props);
-    }
-  }
+    },
+  },
 };
