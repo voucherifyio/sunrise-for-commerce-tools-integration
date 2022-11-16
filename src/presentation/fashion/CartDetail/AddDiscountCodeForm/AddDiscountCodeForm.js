@@ -101,9 +101,7 @@ export default {
           message: message,
           status:
             lastAppliedCode.status ===
-            CODES_STATUSES.APPLIED
-              ? true
-              : false,
+            CODES_STATUSES.APPLIED,
         };
       } else {
         codesInfo.value = {
