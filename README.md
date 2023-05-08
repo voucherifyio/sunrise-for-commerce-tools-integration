@@ -377,7 +377,7 @@ export default {
 
 <template>
   <div class="code-container">
-    <b>{{code.code}}</b>
+    <b>{{code.baner || code.code}}</b>
     <b class="code-gap"></b>
     <b class="code-value">
       <BasePrice :price="{value: {centAmount: typeof code.value == 'number' ? -code.value : code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
