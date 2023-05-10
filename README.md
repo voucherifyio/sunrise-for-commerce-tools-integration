@@ -377,7 +377,7 @@ export default {
 
 <template>
   <div class="code-container">
-    <b>{{code.code}}</b>
+    <b>{{code.baner || code.code}}</b>
     <b class="code-gap"></b>
     <b class="code-value">
       <BasePrice :price="{value: {centAmount: typeof code.value == 'number' ? -code.value : code.value, fractionDigits: cart.totalPrice.fractionDigits, currencyCode: cart.totalPrice.currencyCode}}" />
@@ -1024,6 +1024,7 @@ Bug reports and pull requests are welcome through [GitHub Issues](https://github
 
 
 ## Changelog
+- 2023-05-10 `v4.1.1` - display banner text instead of promotion id for selected promotions 
 - 2022-10-12 `v4.1.0` - fixed clearing cart after refreshing summary page, added auto refreshing shipping methods (fix bug free shipping not showing after applying code), added direct discounts  
 - 2022-09-09 `v4.0.0` - add number of coupons limitations, adjustment for node >= 17, add info when validation fails
 - 2022-08-25 `v3.0.2` - listing promotions on the OrderOverview page
