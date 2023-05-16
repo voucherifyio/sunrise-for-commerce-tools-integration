@@ -1,6 +1,6 @@
 en:
-  midSeasonSale: "MID-SEASON SALE"
-  up50: "UP TO 50%"
+  midSeasonSale: "20% Off All Orders*"
+  up50: "Extra 10% Off For Members Only"
   shopNow: "SHOP NOW"
   checkout: "CHECK OUT"
   newCollection: "NEW COLLECTION"
