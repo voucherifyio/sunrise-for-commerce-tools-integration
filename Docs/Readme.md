@@ -18,6 +18,7 @@
 
 ## Filter products
 
+
 Show a list of products that can be filtered by facets, price range, category or location.
 
 Facets have to be defined as attributes in product types data, for sunrise this is [size](https://github.com/commercetools/commercetools-sunrise-data/blob/master/data/product-type.json#L1229-L1242), [color](https://github.com/commercetools/commercetools-sunrise-data/blob/master/data/product-type.json#L1245-L1404) and [designer](https://github.com/commercetools/commercetools-sunrise-data/blob/master/data/product-type.json#L88-L971) the `isSearchable` property has to be true.
