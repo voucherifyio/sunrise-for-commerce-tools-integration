@@ -105,7 +105,7 @@ export default {
         };
       } else {
         codesInfo.value = {
-          message: 'APPLIED',
+          message: '',
           status: true,
         };
       }
