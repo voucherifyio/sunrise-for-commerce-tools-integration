@@ -97,32 +97,25 @@ export default {
       const lastAppliedCode = codes.find(
         (code) => code.code === enteredCode.value
       );
+      let message = '';
       if (lastAppliedCode) {
-        let message = '';
-        if (lastAppliedCode) {
-          if (
-            lastAppliedCode.status !==
-            CODES_STATUSES.APPLIED
-          ) {
-            message = lastAppliedCode.errMsg;
-          } else if (
-            lastAppliedCode.status !== CODES_STATUSES.NEW
-          ) {
-            message = lastAppliedCode.status;
-          }
+        if (
+          lastAppliedCode.status !==
+          CODES_STATUSES.APPLIED
+        ) {
+          message = lastAppliedCode.errMsg;
+        } else if (
+          lastAppliedCode.status !== CODES_STATUSES.NEW
+        ) {
+          message = lastAppliedCode.status;
         }
-
-        codesInfo.value = {
-          message: errorMessages?errorMessages:message,
-          status:
-            !!errorMessages,
-        };
-      } else {
-        codesInfo.value = {
-          message: '',
-          status: true,
-        };
       }
+
+      codesInfo.value = {
+        message: errorMessages?errorMessages:message,
+        status:
+          !!errorMessages,
+      };
     });
 
     return {
