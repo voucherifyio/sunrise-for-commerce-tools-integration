@@ -66,7 +66,7 @@ export default {
 
     isValidationFailed(props) {
       const isValidationFailed =
-        props.cart.custom.customFieldsRaw.find(
+        props.cart.custom?.customFieldsRaw.find(
           (field) => field.name === 'isValidationFailed'
         );
 
@@ -79,11 +79,11 @@ export default {
 
     couponsLimit(props) {
       const couponLimit =
-        props.cart.custom.customFieldsRaw.find(
+        props.cart.custom?.customFieldsRaw.find(
           (field) => field.name === 'couponsLimit'
         );
 
-      return couponLimit?.value ?? 5;
+      return couponLimit?.value ?? Infinity;
     },
   },
 };
