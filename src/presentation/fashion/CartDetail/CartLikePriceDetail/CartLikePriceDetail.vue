@@ -50,12 +50,6 @@
         :editable="editable"
       />
 
-    <div v-if="isValidationFailed" class="voucher-error">
-      <b>
-        {{ t('validationError') }}
-      </b>
-    </div>
-
     </div>
     <div class="cart-total-wrap">
       <div class="row" v-if="discountValue.centAmount != 0">

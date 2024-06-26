@@ -253,12 +253,6 @@ In **CartLikePriceDetail.vue** DiscountCodes component was made dependent on dis
    />
 </div>
 
-<div v-if="isValidationFailed" class="voucher-error">
-   <b>
-      {{ t('validationError') }}
-   </b>
-</div>
-
 <div class="cart-total-wrap">
   <div class="row" v-if="discountValue.centAmount != 0">
     <div class="single-cart-total-left col-sm-6">
@@ -304,12 +298,6 @@ export default {
         return customLineItemWithDiscount.totalPrice
       }
       return 0
-    },
-     
-    isValidationFailed(props){
-      const isValidationFailed = props.cart.custom.customFieldsRaw.find(field => field.name === 'isValidationFailed')
-      
-      return isValidationFailed?.value ?? false;
     },
 
     couponsLimitExceeded(props){

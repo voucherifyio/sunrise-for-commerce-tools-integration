@@ -79,6 +79,7 @@ export default {
       const codes = returnVoucherifyCodes(props.cart).map(
         (code) => JSON.parse(code)
       );
+      console.log(codes)
       const lastAppliedCode = codes.find(
         (code) => code.code === enteredCode.value
       );

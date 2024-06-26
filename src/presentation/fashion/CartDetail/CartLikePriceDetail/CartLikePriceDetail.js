@@ -64,15 +64,6 @@ export default {
         : 0;
     },
 
-    isValidationFailed(props) {
-      const isValidationFailed =
-        props.cart.custom?.customFieldsRaw.find(
-          (field) => field.name === 'isValidationFailed'
-        );
-
-      return isValidationFailed?.value ?? false;
-    },
-
     couponsLimitExceeded(props) {
       return useCouponsLimitExceeded(props);
     },
