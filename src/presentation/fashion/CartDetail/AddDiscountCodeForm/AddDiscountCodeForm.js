@@ -79,7 +79,21 @@ export default {
       const codes = returnVoucherifyCodes(props.cart).map(
         (code) => JSON.parse(code)
       );
-      console.log(codes)
+      const notAppliedCodes = codes.filter(code => code.status === 'NOT_APPLIED');
+      const errorMessages = notAppliedCodes.reduce(
+          (accumulator, code) => {
+            if(accumulator){
+              accumulator+='; '
+            }
+            if(code.errMsg){
+              accumulator+=code.errMsg
+            }else{
+              accumulator+='Unknown error'
+            }
+            return accumulator;
+          },
+          ''
+      );
       const lastAppliedCode = codes.find(
         (code) => code.code === enteredCode.value
       );
@@ -99,10 +113,9 @@ export default {
         }
 
         codesInfo.value = {
-          message: message,
+          message: errorMessages?errorMessages:message,
           status:
-            lastAppliedCode.status ===
-            CODES_STATUSES.APPLIED,
+            !!errorMessages,
         };
       } else {
         codesInfo.value = {
