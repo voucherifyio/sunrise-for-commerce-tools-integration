@@ -114,7 +114,7 @@ export default {
       codesInfo.value = {
         message: errorMessages?errorMessages:message,
         status:
-          !!errorMessages,
+          !errorMessages,
       };
     });
 
